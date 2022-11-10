@@ -7,12 +7,12 @@
 
 ## Projeto 🛍️:
 <div align="justify">
- Esse projeto teve como inspiração uma clínica, que exerce suas funcionalidades integralmente via meio digital. Com base nisso, utilizamos essa interface, totalmente estilizada por nós, para divulgar nossos serviços. A conclusão desse projeto está ligada à um dos requisitos para a conclusão do curso de Análise e Desenvolvimento de Sistemas, na Facens, destacando aqui nosso orientador para elaboração do projeto, Bruno Aguilar. 
+ Esse projeto teve como inspiração uma clínica, que exerce suas funcionalidades integralmente via meio digital. Com base nisso, utilizamos essa interface, totalmente estilizada por nós, para demonstrar nossos serviços. A conclusão desse projeto está ligada à um dos requisitos para a conclusão do curso de Análise e Desenvolvimento de Sistemas, na Facens, destacando aqui nosso orientador para elaboração do projeto, Bruno Aguilar. 
 </div>
 
 <br>
 <div align="center">
-  <img src="homepage.jpg" width="800px" height="400px">
+  <img src="homepage.png" width="800px" height="400px">
 </div>
 
 ## Tecnologias / IDEs em Utilização 💻: 
