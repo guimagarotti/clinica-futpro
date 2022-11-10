@@ -4,7 +4,6 @@ import conexoes.MySQL;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
-import models.CadastroCliente;
 import models.CadastroPrestador;
 
 public class UICadastroPrest extends javax.swing.JFrame {
@@ -203,6 +202,7 @@ public class UICadastroPrest extends javax.swing.JFrame {
         btnCadastroPrest.setBackground(new java.awt.Color(41, 144, 181));
         btnCadastroPrest.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnCadastroPrest.setForeground(new java.awt.Color(255, 255, 255));
+        btnCadastroPrest.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/adicionar-usuario (1).png"))); // NOI18N
         btnCadastroPrest.setText("INSCREVER-SE");
         btnCadastroPrest.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         btnCadastroPrest.addActionListener(new java.awt.event.ActionListener() {
@@ -386,6 +386,7 @@ public class UICadastroPrest extends javax.swing.JFrame {
         btnBuscaPrest.setBackground(new java.awt.Color(41, 144, 181));
         btnBuscaPrest.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnBuscaPrest.setForeground(new java.awt.Color(255, 255, 255));
+        btnBuscaPrest.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/binoculars.png"))); // NOI18N
         btnBuscaPrest.setText("BUSCAR");
         btnBuscaPrest.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         btnBuscaPrest.addActionListener(new java.awt.event.ActionListener() {
@@ -448,6 +449,7 @@ public class UICadastroPrest extends javax.swing.JFrame {
         btnAtualizaPrest.setBackground(new java.awt.Color(41, 144, 181));
         btnAtualizaPrest.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnAtualizaPrest.setForeground(new java.awt.Color(255, 255, 255));
+        btnAtualizaPrest.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/updated.png"))); // NOI18N
         btnAtualizaPrest.setText("ATUALIZAR");
         btnAtualizaPrest.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         btnAtualizaPrest.addActionListener(new java.awt.event.ActionListener() {
@@ -459,6 +461,7 @@ public class UICadastroPrest extends javax.swing.JFrame {
         btnDeletePrest.setBackground(new java.awt.Color(41, 144, 181));
         btnDeletePrest.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnDeletePrest.setForeground(new java.awt.Color(255, 255, 255));
+        btnDeletePrest.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/delete.png"))); // NOI18N
         btnDeletePrest.setText("DELETAR");
         btnDeletePrest.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         btnDeletePrest.addActionListener(new java.awt.event.ActionListener() {
@@ -470,6 +473,7 @@ public class UICadastroPrest extends javax.swing.JFrame {
         btnLimpaPrest.setBackground(new java.awt.Color(41, 144, 181));
         btnLimpaPrest.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnLimpaPrest.setForeground(new java.awt.Color(255, 255, 255));
+        btnLimpaPrest.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/limpar-limpo.png"))); // NOI18N
         btnLimpaPrest.setText("LIMPAR");
         btnLimpaPrest.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         btnLimpaPrest.addActionListener(new java.awt.event.ActionListener() {
@@ -691,6 +695,7 @@ public class UICadastroPrest extends javax.swing.JFrame {
 
     private void jLabel15MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel15MouseClicked
         UIloginPrest loginprest = new UIloginPrest();
+        this.dispose();
         loginprest.setVisible(true);
     }//GEN-LAST:event_jLabel15MouseClicked
 

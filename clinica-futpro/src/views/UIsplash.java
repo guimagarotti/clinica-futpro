@@ -40,6 +40,7 @@ public class UIsplash extends javax.swing.JFrame {
                     }
                 }
                 UIlogin login = new UIlogin();
+                dispose();
                 login.setVisible(true);
             }
             

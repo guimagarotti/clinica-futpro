@@ -82,6 +82,7 @@ public class UIlogin extends javax.swing.JFrame {
         btnLogin.setBackground(new java.awt.Color(41, 144, 181));
         btnLogin.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnLogin.setForeground(new java.awt.Color(255, 255, 255));
+        btnLogin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/mole.png"))); // NOI18N
         btnLogin.setText("LOGIN");
         btnLogin.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         btnLogin.addActionListener(new java.awt.event.ActionListener() {
@@ -275,7 +276,8 @@ public class UIlogin extends javax.swing.JFrame {
     }//GEN-LAST:event_txtEmailLoginActionPerformed
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
-        UICadastro telaCadastro = new UICadastro();        
+        UICadastro telaCadastro = new UICadastro();  
+        this.dispose();
         telaCadastro.setVisible(true);
     }//GEN-LAST:event_jLabel1MouseClicked
 
@@ -320,8 +322,6 @@ public class UIlogin extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLogin;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

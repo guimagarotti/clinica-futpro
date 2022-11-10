@@ -82,6 +82,7 @@ public class UIloginPrest extends javax.swing.JFrame {
         btnLoginPrest.setBackground(new java.awt.Color(41, 144, 181));
         btnLoginPrest.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnLoginPrest.setForeground(new java.awt.Color(255, 255, 255));
+        btnLoginPrest.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/mole.png"))); // NOI18N
         btnLoginPrest.setText("LOGIN");
         btnLoginPrest.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         btnLoginPrest.addActionListener(new java.awt.event.ActionListener() {
@@ -276,6 +277,7 @@ public class UIloginPrest extends javax.swing.JFrame {
 
     private void jLabel15MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel15MouseClicked
         UICadastroPrest cadastroPrest = new UICadastroPrest();
+        this.dispose();
         cadastroPrest.setVisible(true);
     }//GEN-LAST:event_jLabel15MouseClicked
 

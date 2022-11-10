@@ -159,6 +159,7 @@ public class UICadastro extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         txtCpfCadastro = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -193,6 +194,7 @@ public class UICadastro extends javax.swing.JFrame {
         btnCadastro.setBackground(new java.awt.Color(41, 144, 181));
         btnCadastro.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnCadastro.setForeground(new java.awt.Color(255, 255, 255));
+        btnCadastro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/adicionar-usuario (1).png"))); // NOI18N
         btnCadastro.setText("INSCREVER-SE");
         btnCadastro.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         btnCadastro.addActionListener(new java.awt.event.ActionListener() {
@@ -229,7 +231,7 @@ public class UICadastro extends javax.swing.JFrame {
         jLabel1.setBackground(new java.awt.Color(255, 255, 255));
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(41, 144, 181));
-        jLabel1.setText(" Nome completo");
+        jLabel1.setText("Nome completo");
 
         txtNomeCadastro.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtNomeCadastro.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(41, 144, 181)));
@@ -266,22 +268,6 @@ public class UICadastro extends javax.swing.JFrame {
         txtEmailCadastro.setLayout(txtEmailCadastroLayout);
         txtEmailCadastroLayout.setHorizontalGroup(
             txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(txtEmailCadastroLayout.createSequentialGroup()
-                .addGroup(txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(txtEmailCadastroLayout.createSequentialGroup()
-                        .addGap(50, 50, 50)
-                        .addGroup(txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel8)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel9)
-                            .addComponent(txtNomeCadastro, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
-                            .addComponent(txtemailCadastro)
-                            .addComponent(txtSenhaCadastro)
-                            .addComponent(txtCpfCadastro)))
-                    .addGroup(txtEmailCadastroLayout.createSequentialGroup()
-                        .addGap(42, 42, 42)
-                        .addComponent(jLabel1)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtEmailCadastroLayout.createSequentialGroup()
                 .addGap(0, 109, Short.MAX_VALUE)
                 .addGroup(txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -294,6 +280,19 @@ public class UICadastro extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtEmailCadastroLayout.createSequentialGroup()
                         .addComponent(btnCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(85, 85, 85))))
+            .addGroup(txtEmailCadastroLayout.createSequentialGroup()
+                .addGap(59, 59, 59)
+                .addGroup(txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addGroup(txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLabel8)
+                        .addComponent(jLabel3)
+                        .addComponent(jLabel9)
+                        .addComponent(txtNomeCadastro, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
+                        .addComponent(txtemailCadastro)
+                        .addComponent(txtSenhaCadastro)
+                        .addComponent(txtCpfCadastro)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         txtEmailCadastroLayout.setVerticalGroup(
             txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -323,6 +322,17 @@ public class UICadastro extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        jLabel16.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel16.setForeground(new java.awt.Color(41, 144, 141));
+        jLabel16.setText("Quero ser prestador");
+        jLabel16.setToolTipText("");
+        jLabel16.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(41, 144, 181)));
+        jLabel16.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel16MouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -331,12 +341,18 @@ public class UICadastro extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(txtEmailCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(36, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel16)
+                .addGap(172, 172, 172))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(txtEmailCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -350,7 +366,7 @@ public class UICadastro extends javax.swing.JFrame {
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel6.setText("<html> A melhor clínica esportiva para o seu  <br> ATLETA !");
+        jLabel6.setText("<html> A melhor clínica esportiva para <br> o seu ATLETA !");
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -360,6 +376,7 @@ public class UICadastro extends javax.swing.JFrame {
         btnBusca.setBackground(new java.awt.Color(41, 144, 181));
         btnBusca.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnBusca.setForeground(new java.awt.Color(255, 255, 255));
+        btnBusca.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/binoculars.png"))); // NOI18N
         btnBusca.setText("BUSCAR");
         btnBusca.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         btnBusca.addActionListener(new java.awt.event.ActionListener() {
@@ -396,7 +413,7 @@ public class UICadastro extends javax.swing.JFrame {
         jLabel12.setBackground(new java.awt.Color(255, 255, 255));
         jLabel12.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel12.setForeground(new java.awt.Color(41, 144, 181));
-        jLabel12.setText(" Nome completo");
+        jLabel12.setText("Nome completo");
 
         txtConsultaNome.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtConsultaNome.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(41, 144, 181)));
@@ -422,6 +439,7 @@ public class UICadastro extends javax.swing.JFrame {
         btnAtualiza.setBackground(new java.awt.Color(41, 144, 181));
         btnAtualiza.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnAtualiza.setForeground(new java.awt.Color(255, 255, 255));
+        btnAtualiza.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/updated.png"))); // NOI18N
         btnAtualiza.setText("ATUALIZAR");
         btnAtualiza.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         btnAtualiza.addActionListener(new java.awt.event.ActionListener() {
@@ -433,6 +451,7 @@ public class UICadastro extends javax.swing.JFrame {
         btnDelete.setBackground(new java.awt.Color(41, 144, 181));
         btnDelete.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnDelete.setForeground(new java.awt.Color(255, 255, 255));
+        btnDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/delete.png"))); // NOI18N
         btnDelete.setText("DELETAR");
         btnDelete.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         btnDelete.addActionListener(new java.awt.event.ActionListener() {
@@ -444,6 +463,7 @@ public class UICadastro extends javax.swing.JFrame {
         btnLimpa.setBackground(new java.awt.Color(41, 144, 181));
         btnLimpa.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnLimpa.setForeground(new java.awt.Color(255, 255, 255));
+        btnLimpa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/limpar-limpo.png"))); // NOI18N
         btnLimpa.setText("LIMPAR");
         btnLimpa.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         btnLimpa.addActionListener(new java.awt.event.ActionListener() {
@@ -465,25 +485,24 @@ public class UICadastro extends javax.swing.JFrame {
             .addGroup(txtEmailCadastro1Layout.createSequentialGroup()
                 .addGroup(txtEmailCadastro1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(txtEmailCadastro1Layout.createSequentialGroup()
-                        .addGap(50, 50, 50)
-                        .addGroup(txtEmailCadastro1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel11)
-                            .addComponent(jLabel13)
-                            .addComponent(jLabel14)
-                            .addGroup(txtEmailCadastro1Layout.createSequentialGroup()
-                                .addComponent(btnBusca, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
-                                .addComponent(btnLimpa, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(txtConsultaNome)
-                            .addComponent(txtConsultaEmail)
-                            .addComponent(txtConsultaSenha)
-                            .addComponent(txtCpfConsulta)))
-                    .addGroup(txtEmailCadastro1Layout.createSequentialGroup()
-                        .addGap(42, 42, 42)
-                        .addComponent(jLabel12))
-                    .addGroup(txtEmailCadastro1Layout.createSequentialGroup()
                         .addGap(125, 125, 125)
-                        .addComponent(jLabel10)))
+                        .addComponent(jLabel10))
+                    .addGroup(txtEmailCadastro1Layout.createSequentialGroup()
+                        .addGap(50, 50, 50)
+                        .addGroup(txtEmailCadastro1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel12)
+                            .addGroup(txtEmailCadastro1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jLabel11)
+                                .addComponent(jLabel13)
+                                .addComponent(jLabel14)
+                                .addGroup(txtEmailCadastro1Layout.createSequentialGroup()
+                                    .addComponent(btnBusca, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                                    .addComponent(btnLimpa, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(txtConsultaNome)
+                                .addComponent(txtConsultaEmail)
+                                .addComponent(txtConsultaSenha)
+                                .addComponent(txtCpfConsulta)))))
                 .addContainerGap(47, Short.MAX_VALUE))
         );
         txtEmailCadastro1Layout.setVerticalGroup(
@@ -551,9 +570,9 @@ public class UICadastro extends javax.swing.JFrame {
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(32, 32, 32)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(35, 35, 35)
+                .addGap(18, 18, 18)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(255, Short.MAX_VALUE))
+                .addContainerGap(272, Short.MAX_VALUE))
         );
         kGradientPanel1Layout.setVerticalGroup(
             kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -579,7 +598,7 @@ public class UICadastro extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(kGradientPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 56, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -647,6 +666,7 @@ public class UICadastro extends javax.swing.JFrame {
 
     private void jLabel15MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel15MouseClicked
         UIlogin telaLogin = new UIlogin();
+        this.dispose();
         telaLogin.setVisible(true);
     }//GEN-LAST:event_jLabel15MouseClicked
 
@@ -668,6 +688,12 @@ public class UICadastro extends javax.swing.JFrame {
             }
         });
     }//GEN-LAST:event_btnLimpaActionPerformed
+
+    private void jLabel16MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel16MouseClicked
+        UICadastroPrest cadastroPrest = new UICadastroPrest();
+        this.dispose();
+        cadastroPrest.setVisible(true);
+    }//GEN-LAST:event_jLabel16MouseClicked
 
     /**
      * @param args the command line arguments
@@ -718,6 +744,7 @@ public class UICadastro extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
