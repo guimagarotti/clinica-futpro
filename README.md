@@ -1,4 +1,4 @@
-# Fábrica de Projetos II - Magnum TI
+# Linguagens de Programação - Clínica FUTPRO
 
 ## Informações da Equipe 🏆: 
 <div align="justify">
