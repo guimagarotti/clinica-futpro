@@ -4,48 +4,48 @@ import conexoes.MySQL;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
-import models.LoginCliente;
+import models.LoginPrestador;
 
-public class UIlogin extends javax.swing.JFrame {
+public class UIloginPrest extends javax.swing.JFrame {
 
     MySQL conectar = new MySQL();
-    LoginCliente loginCliente = new LoginCliente();
+    LoginPrestador loginPrestador = new LoginPrestador();
 
-    public void logaCliente(LoginCliente loginCliente) {
+    public void logaPrestador(LoginPrestador loginPrestador) {
         this.conectar.conectaBanco();
 
-        String consultaEmail = this.txtEmailLogin.getText();
-        String consultaSenha = String.valueOf(txtSenhaLogin.getPassword());
+        String consultaEmail = this.txtEmailLoginPrest.getText();
+        String consultaSenha = String.valueOf(txtSenhaLoginPrest.getPassword());
 
         try {
             this.conectar.executarSQL(
-                    "SELECT email, senha FROM tb_cadastro WHERE email = '" + consultaEmail + "' and senha = '" + consultaSenha + "';");
+                    "SELECT email, senha FROM tb_cadastroPrest WHERE email = '" + consultaEmail + "' and senha = '" + consultaSenha + "';");
             while (this.conectar.getResultSet().next()) {
-                loginCliente.setEmail(this.conectar.getResultSet().getString(1));
-                loginCliente.setSenha(this.conectar.getResultSet().getString(2));
+                loginPrestador.setEmail(this.conectar.getResultSet().getString(1));
+                loginPrestador.setSenha(this.conectar.getResultSet().getString(2));
             }
 
-            if (loginCliente.getEmail() == null) {
-                JOptionPane.showMessageDialog(null, "[ERRO]: Cliente não localizado!");
+            if (loginPrestador.getEmail() == null) {
+                JOptionPane.showMessageDialog(null, "[ERRO]: Prestador não localizado!");
             }
 
-            if (loginCliente.getEmail() != null) {
-                System.out.println(txtEmailLogin.getText());
-                JOptionPane.showMessageDialog(null, "[OK]: Cliente logado com sucesso!");
+            if (loginPrestador.getEmail() != null) {
+                System.out.println(txtEmailLoginPrest.getText());
+                JOptionPane.showMessageDialog(null, "[OK]: Prestador logado com sucesso!");
             }
         } catch (Exception e) {
-            System.out.println("Erro ao logar cliente!" + e.getMessage());
+            System.out.println("Erro ao logar prestador!" + e.getMessage());
         } finally {
             this.conectar.fechaBanco();
         }
     }
 
     private void LimpaCampos() {
-        txtEmailLogin.setText("");
-        txtSenhaLogin.setText("");
+        txtEmailLoginPrest.setText("");
+        txtSenhaLoginPrest.setText("");
     }
 
-    public UIlogin() {
+    public UIloginPrest() {
         initComponents();
     }
 
@@ -56,13 +56,13 @@ public class UIlogin extends javax.swing.JFrame {
         kGradientPanel1 = new keeptoo.KGradientPanel();
         jPanel1 = new javax.swing.JPanel();
         txtEmailCadastro = new javax.swing.JPanel();
-        btnLogin = new javax.swing.JButton();
+        btnLoginPrest = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
-        txtSenhaLogin = new javax.swing.JPasswordField();
+        txtSenhaLoginPrest = new javax.swing.JPasswordField();
         jLabel8 = new javax.swing.JLabel();
-        txtEmailLogin = new javax.swing.JTextField();
+        txtEmailLoginPrest = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -79,26 +79,26 @@ public class UIlogin extends javax.swing.JFrame {
         txtEmailCadastro.setBackground(new java.awt.Color(255, 255, 255));
         txtEmailCadastro.setForeground(new java.awt.Color(242, 104, 53));
 
-        btnLogin.setBackground(new java.awt.Color(41, 144, 181));
-        btnLogin.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnLogin.setForeground(new java.awt.Color(255, 255, 255));
-        btnLogin.setText("LOGIN");
-        btnLogin.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
-        btnLogin.addActionListener(new java.awt.event.ActionListener() {
+        btnLoginPrest.setBackground(new java.awt.Color(41, 144, 181));
+        btnLoginPrest.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnLoginPrest.setForeground(new java.awt.Color(255, 255, 255));
+        btnLoginPrest.setText("LOGIN");
+        btnLoginPrest.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        btnLoginPrest.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnLoginActionPerformed(evt);
+                btnLoginPrestActionPerformed(evt);
             }
         });
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(41, 144, 181));
-        jLabel7.setText("ACESSAR USUÁRIO");
+        jLabel7.setText("ACESSAR PRESTADOR");
 
-        txtSenhaLogin.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        txtSenhaLogin.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(41, 144, 181)));
-        txtSenhaLogin.addActionListener(new java.awt.event.ActionListener() {
+        txtSenhaLoginPrest.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        txtSenhaLoginPrest.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(41, 144, 181)));
+        txtSenhaLoginPrest.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtSenhaLoginActionPerformed(evt);
+                txtSenhaLoginPrestActionPerformed(evt);
             }
         });
 
@@ -107,11 +107,11 @@ public class UIlogin extends javax.swing.JFrame {
         jLabel8.setForeground(new java.awt.Color(41, 144, 181));
         jLabel8.setText("Senha");
 
-        txtEmailLogin.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        txtEmailLogin.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(41, 144, 181)));
-        txtEmailLogin.addActionListener(new java.awt.event.ActionListener() {
+        txtEmailLoginPrest.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtEmailLoginPrest.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(41, 144, 181)));
+        txtEmailLoginPrest.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtEmailLoginActionPerformed(evt);
+                txtEmailLoginPrestActionPerformed(evt);
             }
         });
 
@@ -120,12 +120,13 @@ public class UIlogin extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(41, 144, 181));
         jLabel3.setText("Email");
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(41, 144, 141));
-        jLabel1.setText("Não tem Login? Faça seu cadastro");
-        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+        jLabel15.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel15.setForeground(new java.awt.Color(41, 144, 141));
+        jLabel15.setText("Não tem Login? Faça seu cadastro");
+        jLabel15.setToolTipText("");
+        jLabel15.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel1MouseClicked(evt);
+                jLabel15MouseClicked(evt);
             }
         });
 
@@ -133,25 +134,24 @@ public class UIlogin extends javax.swing.JFrame {
         txtEmailCadastro.setLayout(txtEmailCadastroLayout);
         txtEmailCadastroLayout.setHorizontalGroup(
             txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtEmailCadastroLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabel7)
-                .addGap(118, 118, 118))
             .addGroup(txtEmailCadastroLayout.createSequentialGroup()
                 .addGroup(txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(txtEmailCadastroLayout.createSequentialGroup()
                         .addGap(50, 50, 50)
                         .addGroup(txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel8)
-                            .addComponent(txtEmailLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtEmailLoginPrest, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3)
-                            .addComponent(txtSenhaLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txtSenhaLoginPrest, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(txtEmailCadastroLayout.createSequentialGroup()
                         .addGap(88, 88, 88)
-                        .addGroup(txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(69, Short.MAX_VALUE))
+                        .addGroup(txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel15)
+                            .addComponent(btnLoginPrest, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(txtEmailCadastroLayout.createSequentialGroup()
+                        .addGap(102, 102, 102)
+                        .addComponent(jLabel7)))
+                .addContainerGap(68, Short.MAX_VALUE))
         );
         txtEmailCadastroLayout.setVerticalGroup(
             txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -161,16 +161,16 @@ public class UIlogin extends javax.swing.JFrame {
                 .addGap(82, 82, 82)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtEmailLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtEmailLoginPrest, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(45, 45, 45)
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtSenhaLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtSenhaLoginPrest, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(94, 94, 94)
-                .addComponent(btnLogin, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel1)
-                .addGap(28, 28, 28))
+                .addComponent(btnLoginPrest, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
+                .addGap(35, 35, 35)
+                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -219,7 +219,7 @@ public class UIlogin extends javax.swing.JFrame {
                     .addGroup(kGradientPanel1Layout.createSequentialGroup()
                         .addGap(146, 146, 146)
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 279, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 280, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(180, 180, 180))
         );
@@ -256,28 +256,28 @@ public class UIlogin extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        btnLogin.addActionListener(new ActionListener() {
+    private void btnLoginPrestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginPrestActionPerformed
+        btnLoginPrest.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                logaCliente(loginCliente);
+                logaPrestador(loginPrestador);
                 LimpaCampos();
             }
         });
-    }//GEN-LAST:event_btnLoginActionPerformed
+    }//GEN-LAST:event_btnLoginPrestActionPerformed
 
-    private void txtSenhaLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSenhaLoginActionPerformed
+    private void txtSenhaLoginPrestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSenhaLoginPrestActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtSenhaLoginActionPerformed
+    }//GEN-LAST:event_txtSenhaLoginPrestActionPerformed
 
-    private void txtEmailLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmailLoginActionPerformed
+    private void txtEmailLoginPrestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmailLoginPrestActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtEmailLoginActionPerformed
+    }//GEN-LAST:event_txtEmailLoginPrestActionPerformed
 
-    private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
-        UICadastro telaCadastro = new UICadastro();        
-        telaCadastro.setVisible(true);
-    }//GEN-LAST:event_jLabel1MouseClicked
+    private void jLabel15MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel15MouseClicked
+        UICadastroPrest cadastroPrest = new UICadastroPrest();
+        cadastroPrest.setVisible(true);
+    }//GEN-LAST:event_jLabel15MouseClicked
 
     /**
      * @param args the command line arguments
@@ -296,14 +296,18 @@ public class UIlogin extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(UIlogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UIloginPrest.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(UIlogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UIloginPrest.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(UIlogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UIloginPrest.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(UIlogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UIloginPrest.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -312,16 +316,14 @@ public class UIlogin extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new UIlogin().setVisible(true);
+                new UIloginPrest().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnLogin;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton btnLoginPrest;
     private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -332,7 +334,7 @@ public class UIlogin extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private keeptoo.KGradientPanel kGradientPanel1;
     private javax.swing.JPanel txtEmailCadastro;
-    private javax.swing.JTextField txtEmailLogin;
-    private javax.swing.JPasswordField txtSenhaLogin;
+    private javax.swing.JTextField txtEmailLoginPrest;
+    private javax.swing.JPasswordField txtSenhaLoginPrest;
     // End of variables declaration//GEN-END:variables
 }
