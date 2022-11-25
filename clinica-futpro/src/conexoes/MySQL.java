@@ -63,11 +63,11 @@ public class MySQL {
             //conn = DriverManager.getConnection("jdbc:mysql://localhost3306/banco_loja", "root", "root");
 
             if (conn != null) {
-                System.out.println("Conexão efetuada com sucesso! " + "ID: " + conn);
+                System.out.println("Conexao efetuada com sucesso! " + "ID: " + conn);
             }
 
         } catch (Exception e) {
-            System.out.println("Conexão não realizada - ERRO: " + e.getMessage());
+            System.out.println("Conexao não realizada - ERRO: " + e.getMessage());
         }
     }
 

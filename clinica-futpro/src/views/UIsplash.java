@@ -39,7 +39,7 @@ public class UIsplash extends javax.swing.JFrame {
                         Logger.getLogger(UIsplash.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                UIlogin login = new UIlogin();
+                UIloginUsuario login = new UIloginUsuario();
                 dispose();
                 login.setVisible(true);
             }

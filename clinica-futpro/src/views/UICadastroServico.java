@@ -34,7 +34,7 @@ public class UICadastroServico extends javax.swing.JFrame {
     private void listaPrestadores() {
         this.conectar.conectaBanco();
 
-        String sql = "SELECT tb_cadastroprest.nome from tb_cadastroprest;";
+        String sql = "SELECT tb_prestadores.nome from tb_prestadores;";
 
         try {
             this.conectar.executarSQL(sql);
@@ -55,7 +55,7 @@ public class UICadastroServico extends javax.swing.JFrame {
         novoServico.setHash(txtCodigoCadastro.getText());
         novoServico.setEmpresa((String) cbxEmpresaCadastro.getSelectedItem());
         novoServico.setPrestador((String) cbxPrestadorCadastro.getSelectedItem());
-        novoServico.setTipo(txtTipoCadastro.getText());
+        novoServico.setTipo((String) cbxServicoCadastro.getSelectedItem());
         novoServico.setQtd_horas(Double.parseDouble(txtHorasCadastro.getText()));
         novoServico.setDescricao(txtDescricaoCadastro.getText());
 
@@ -100,7 +100,6 @@ public class UICadastroServico extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "[ERRO]: Serviço não localizado!");
             }
 
-            txtTipoConsulta.setText(novoServico.getTipo());
             txtHorasConsulta.setText(Double.toString(novoServico.getQtd_horas()));
             txtDescricaoConsulta.setText(novoServico.getDescricao());
         } catch (Exception e) {
@@ -119,7 +118,7 @@ public class UICadastroServico extends javax.swing.JFrame {
         try {
             this.conectar.updateSQL(
                     "UPDATE tb_servicos SET tipo="
-                    + "'" + txtTipoConsulta.getText() + "',"
+                    + "'" + cbxServicoConsulta.getSelectedItem() + "',"
                     + " empresa =" + "'" + cbxEmpresaConsulta.getSelectedItem() + "',"
                     + " prestador =" + "'" + cbxPrestadorConsulta.getSelectedItem() + "',"
                     + " qtd_horas =" + "'" + txtHorasConsulta.getText() + "',"
@@ -132,6 +131,10 @@ public class UICadastroServico extends javax.swing.JFrame {
             } else {
                 JOptionPane.showMessageDialog(null, "[OK]: Serviço atualizado com sucesso!");
             }
+
+            cbxEmpresaConsulta.setSelectedIndex(0);
+            cbxPrestadorConsulta.setSelectedIndex(0);
+            cbxServicoConsulta.setSelectedIndex(0);
         } catch (Exception e) {
             System.out.println("Não foi possível atualizar a serviço!" + e.getMessage());
             JOptionPane.showMessageDialog(null, "[ERRO]: Erro ao atualizar serviço!");
@@ -155,26 +158,26 @@ public class UICadastroServico extends javax.swing.JFrame {
             } else {
                 JOptionPane.showMessageDialog(null, "[OK]: Serviço deletado com sucesso!");
             }
+
+            cbxEmpresaConsulta.setSelectedIndex(0);
+            cbxPrestadorConsulta.setSelectedIndex(0);
+            cbxServicoConsulta.setSelectedIndex(0);
         } catch (Exception e) {
             System.out.println("Não foi possível deletar o servico! " + e.getMessage());
             JOptionPane.showMessageDialog(null, "[ERRO]: Erro ao deletar serviço!");
         } finally {
-            txtTipoConsulta.setText("");
-
             this.conectar.fechaBanco();
         }
     }
 
     public void LimpaCampos() {
         txtCodigoCadastro.setText("");
-        txtTipoCadastro.setText("");
         txtHorasCadastro.setText("");
         txtDescricaoCadastro.setText("");
     }
 
     public void LimpaCamposConsulta() {
         txtHashConsulta.setText("");
-        txtTipoConsulta.setText("");
         txtHorasConsulta.setText("");
         txtDescricaoConsulta.setText("");
     }
@@ -199,13 +202,16 @@ public class UICadastroServico extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         txtHorasCadastro = new javax.swing.JTextField();
-        txtTipoCadastro = new javax.swing.JTextField();
         txtDescricaoCadastro = new javax.swing.JTextField();
         jLabel17 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
         txtCodigoCadastro = new javax.swing.JTextField();
         cbxEmpresaCadastro = new javax.swing.JComboBox<>();
         cbxPrestadorCadastro = new javax.swing.JComboBox<>();
+        cbxServicoCadastro = new javax.swing.JComboBox<>();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel22 = new javax.swing.JLabel();
+        jLabel23 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -214,7 +220,6 @@ public class UICadastroServico extends javax.swing.JFrame {
         txtEmailCadastro1 = new javax.swing.JPanel();
         btnBusca = new javax.swing.JButton();
         jLabel10 = new javax.swing.JLabel();
-        txtTipoConsulta = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         txtHashConsulta = new javax.swing.JTextField();
@@ -229,6 +234,7 @@ public class UICadastroServico extends javax.swing.JFrame {
         cbxPrestadorConsulta = new javax.swing.JComboBox<>();
         txtHorasConsulta = new javax.swing.JTextField();
         jLabel16 = new javax.swing.JLabel();
+        cbxServicoConsulta = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -260,7 +266,7 @@ public class UICadastroServico extends javax.swing.JFrame {
         jLabel8.setBackground(new java.awt.Color(255, 255, 255));
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(41, 144, 181));
-        jLabel8.setText("Tipo");
+        jLabel8.setText("Tipo de Serviço");
 
         jLabel1.setBackground(new java.awt.Color(255, 255, 255));
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -282,14 +288,6 @@ public class UICadastroServico extends javax.swing.JFrame {
         txtHorasCadastro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtHorasCadastroActionPerformed(evt);
-            }
-        });
-
-        txtTipoCadastro.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        txtTipoCadastro.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(41, 144, 181)));
-        txtTipoCadastro.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtTipoCadastroActionPerformed(evt);
             }
         });
 
@@ -327,6 +325,19 @@ public class UICadastroServico extends javax.swing.JFrame {
         cbxPrestadorCadastro.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Prestadores Cadastrados" }));
         cbxPrestadorCadastro.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(41, 144, 181)));
 
+        cbxServicoCadastro.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        cbxServicoCadastro.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Serviços Disponíveis", "Massagista", "Nutricionista", "Fisioterapeuta" }));
+        cbxServicoCadastro.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(41, 144, 181)));
+
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(41, 144, 141));
+        jLabel11.setText("Cadastrar Nova Empresa? Clique aqui");
+        jLabel11.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel11MouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout txtEmailCadastroLayout = new javax.swing.GroupLayout(txtEmailCadastro);
         txtEmailCadastro.setLayout(txtEmailCadastroLayout);
         txtEmailCadastroLayout.setHorizontalGroup(
@@ -335,26 +346,31 @@ public class UICadastroServico extends javax.swing.JFrame {
                 .addGap(0, 125, Short.MAX_VALUE)
                 .addComponent(jLabel7)
                 .addGap(101, 101, 101))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtEmailCadastroLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(88, 88, 88))
             .addGroup(txtEmailCadastroLayout.createSequentialGroup()
                 .addGap(59, 59, 59)
                 .addGroup(txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(cbxEmpresaCadastro, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel19)
-                    .addComponent(jLabel17)
                     .addComponent(jLabel1)
                     .addComponent(jLabel8)
                     .addComponent(jLabel3)
                     .addComponent(jLabel9)
-                    .addComponent(txtHorasCadastro)
-                    .addComponent(txtTipoCadastro)
+                    .addComponent(jLabel17)
                     .addComponent(txtDescricaoCadastro)
                     .addComponent(txtCodigoCadastro)
-                    .addComponent(cbxPrestadorCadastro, 0, 347, Short.MAX_VALUE))
-                .addContainerGap(18, Short.MAX_VALUE))
+                    .addComponent(cbxPrestadorCadastro, 0, 347, Short.MAX_VALUE)
+                    .addComponent(cbxServicoCadastro, 0, 347, Short.MAX_VALUE)
+                    .addComponent(txtHorasCadastro))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtEmailCadastroLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtEmailCadastroLayout.createSequentialGroup()
+                        .addComponent(btnCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(88, 88, 88))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtEmailCadastroLayout.createSequentialGroup()
+                        .addComponent(jLabel11)
+                        .addGap(76, 76, 76))))
         );
         txtEmailCadastroLayout.setVerticalGroup(
             txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -375,36 +391,67 @@ public class UICadastroServico extends javax.swing.JFrame {
                 .addComponent(cbxPrestadorCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel8)
-                .addGap(10, 10, 10)
-                .addComponent(txtTipoCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(16, 16, 16)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cbxServicoCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel17)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(txtHorasCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(16, 16, 16)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(txtDescricaoCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(69, 69, 69)
+                .addGap(44, 44, 44)
                 .addComponent(btnCadastro, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
-                .addGap(35, 35, 35))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel11))
         );
+
+        jLabel22.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel22.setForeground(new java.awt.Color(41, 144, 141));
+        jLabel22.setText("Não tem Login? Faça seu cadastro");
+
+        jLabel23.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel23.setForeground(new java.awt.Color(41, 144, 141));
+        jLabel23.setText("Cadastrar Novo Prestador? Clique aqui");
+        jLabel23.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel23MouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(txtEmailCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(txtEmailCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(99, 99, 99)
+                        .addComponent(jLabel23)))
                 .addContainerGap(36, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(jLabel22)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(txtEmailCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel23)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(jLabel22)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/Futpro_logo2__3_-removebg-preview (1).png"))); // NOI18N
@@ -438,15 +485,7 @@ public class UICadastroServico extends javax.swing.JFrame {
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(41, 144, 181));
-        jLabel10.setText("BUSCAR SERVIÇOS");
-
-        txtTipoConsulta.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        txtTipoConsulta.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(41, 144, 181)));
-        txtTipoConsulta.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtTipoConsultaActionPerformed(evt);
-            }
-        });
+        jLabel10.setText("BUSCAR SERVIÇO");
 
         jLabel13.setBackground(new java.awt.Color(255, 255, 255));
         jLabel13.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -546,16 +585,17 @@ public class UICadastroServico extends javax.swing.JFrame {
         jLabel16.setForeground(new java.awt.Color(41, 144, 181));
         jLabel16.setText("Quantidade de Horas");
 
+        cbxServicoConsulta.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        cbxServicoConsulta.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Serviços Disponíveis", "Massagista", "Nutricionista", "Fisioterapeuta" }));
+        cbxServicoConsulta.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(41, 144, 181)));
+
         javax.swing.GroupLayout txtEmailCadastro1Layout = new javax.swing.GroupLayout(txtEmailCadastro1);
         txtEmailCadastro1.setLayout(txtEmailCadastro1Layout);
         txtEmailCadastro1Layout.setHorizontalGroup(
             txtEmailCadastro1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtEmailCadastro1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabel10)
-                .addGap(107, 107, 107))
             .addGroup(txtEmailCadastro1Layout.createSequentialGroup()
                 .addGroup(txtEmailCadastro1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(cbxServicoConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtHashConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(txtEmailCadastro1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(txtEmailCadastro1Layout.createSequentialGroup()
@@ -564,13 +604,12 @@ public class UICadastroServico extends javax.swing.JFrame {
                                 .addGroup(txtEmailCadastro1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jLabel15)
                                     .addComponent(jLabel13)
-                                    .addComponent(txtDescricaoConsulta, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
+                                    .addComponent(txtDescricaoConsulta)
                                     .addComponent(jLabel14)
-                                    .addComponent(txtTipoConsulta)
                                     .addComponent(cbxEmpresaConsulta, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jLabel20)
                                     .addComponent(jLabel12)
-                                    .addComponent(cbxPrestadorConsulta, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(cbxPrestadorConsulta, 0, 313, Short.MAX_VALUE)
                                     .addComponent(txtHorasConsulta))
                                 .addGroup(txtEmailCadastro1Layout.createSequentialGroup()
                                     .addComponent(btnBusca, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -583,6 +622,10 @@ public class UICadastroServico extends javax.swing.JFrame {
                                 .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(btnAtualiza, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(30, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtEmailCadastro1Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel10)
+                .addGap(109, 109, 109))
         );
         txtEmailCadastro1Layout.setVerticalGroup(
             txtEmailCadastro1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -608,8 +651,8 @@ public class UICadastroServico extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtTipoConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(22, 22, 22)
+                .addComponent(cbxServicoConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel16)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtHorasConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -617,7 +660,7 @@ public class UICadastroServico extends javax.swing.JFrame {
                 .addComponent(jLabel15)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtDescricaoConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(26, 26, 26)
                 .addComponent(btnAtualiza, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnDelete, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
@@ -722,10 +765,6 @@ public class UICadastroServico extends javax.swing.JFrame {
         });
     }//GEN-LAST:event_btnBuscaActionPerformed
 
-    private void txtTipoConsultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTipoConsultaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtTipoConsultaActionPerformed
-
     private void txtHashConsultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHashConsultaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtHashConsultaActionPerformed
@@ -759,10 +798,6 @@ public class UICadastroServico extends javax.swing.JFrame {
         });
     }//GEN-LAST:event_btnLimpaActionPerformed
 
-    private void txtTipoCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTipoCadastroActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtTipoCadastroActionPerformed
-
     private void txtDescricaoCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDescricaoCadastroActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtDescricaoCadastroActionPerformed
@@ -778,6 +813,18 @@ public class UICadastroServico extends javax.swing.JFrame {
     private void txtHorasConsultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHorasConsultaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtHorasConsultaActionPerformed
+
+    private void jLabel11MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel11MouseClicked
+        UICadastroEmpresa telaCadastroEmpresa = new UICadastroEmpresa();
+        this.dispose();
+        telaCadastroEmpresa.setVisible(true);
+    }//GEN-LAST:event_jLabel11MouseClicked
+
+    private void jLabel23MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel23MouseClicked
+        UICadastroPrestador telaCadastroPrestador = new UICadastroPrestador();
+        this.dispose();
+        telaCadastroPrestador.setVisible(true);
+    }//GEN-LAST:event_jLabel23MouseClicked
 
     /**
      * @param args the command line arguments
@@ -839,8 +886,11 @@ public class UICadastroServico extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cbxEmpresaConsulta;
     private javax.swing.JComboBox<String> cbxPrestadorCadastro;
     private javax.swing.JComboBox<String> cbxPrestadorConsulta;
+    private javax.swing.JComboBox<String> cbxServicoCadastro;
+    private javax.swing.JComboBox<String> cbxServicoConsulta;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
@@ -850,6 +900,8 @@ public class UICadastroServico extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -868,7 +920,5 @@ public class UICadastroServico extends javax.swing.JFrame {
     private javax.swing.JTextField txtHashConsulta;
     private javax.swing.JTextField txtHorasCadastro;
     private javax.swing.JTextField txtHorasConsulta;
-    private javax.swing.JTextField txtTipoCadastro;
-    private javax.swing.JTextField txtTipoConsulta;
     // End of variables declaration//GEN-END:variables
 }
