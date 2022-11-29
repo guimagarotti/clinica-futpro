@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 import models.LoginCliente;
 
-public class UIloginUsuario extends javax.swing.JFrame {
+public class UILoginUsuario extends javax.swing.JFrame {
 
     MySQL conectar = new MySQL();
     LoginCliente loginCliente = new LoginCliente();
@@ -19,20 +19,17 @@ public class UIloginUsuario extends javax.swing.JFrame {
 
         try {
             this.conectar.executarSQL(
-                    "SELECT email, senha FROM tb_cadastro WHERE email = '" + consultaEmail + "' and senha = '" + consultaSenha + "';");
+                    "SELECT email, senha FROM tb_usuarios WHERE email = '" + consultaEmail + "' and senha = '" + consultaSenha + "';");
             while (this.conectar.getResultSet().next()) {
                 loginCliente.setEmail(this.conectar.getResultSet().getString(1));
                 loginCliente.setSenha(this.conectar.getResultSet().getString(2));
             }
 
             if (loginCliente.getEmail() == null) {
-                JOptionPane.showMessageDialog(null, "[ERRO]: Cliente não localizado!");
-            }
+                JOptionPane.showMessageDialog(null, "[ERRO]: Usuário não localizado!");
+            } else {
+                JOptionPane.showMessageDialog(null, "[OK]: Usuário logado com sucesso!");
 
-            if (loginCliente.getEmail() != null) {
-                System.out.println(txtEmailLogin.getText());
-                JOptionPane.showMessageDialog(null, "[OK]: Cliente logado com sucesso!");
-                
                 UICadastroPrestador telaCadastroPrestador = new UICadastroPrestador();
                 this.dispose();
                 telaCadastroPrestador.setVisible(true);
@@ -49,7 +46,7 @@ public class UIloginUsuario extends javax.swing.JFrame {
         txtSenhaLogin.setText("");
     }
 
-    public UIloginUsuario() {
+    public UILoginUsuario() {
         initComponents();
     }
 
@@ -127,7 +124,7 @@ public class UIloginUsuario extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(41, 144, 141));
-        jLabel1.setText("Não tem Login? Faça seu cadastro");
+        jLabel1.setText("Não tem Login? Cadastre-se");
         jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel1MouseClicked(evt);
@@ -145,18 +142,19 @@ public class UIloginUsuario extends javax.swing.JFrame {
             .addGroup(txtEmailCadastroLayout.createSequentialGroup()
                 .addGroup(txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(txtEmailCadastroLayout.createSequentialGroup()
-                        .addGap(50, 50, 50)
+                        .addGap(55, 55, 55)
                         .addGroup(txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel8)
                             .addComponent(txtEmailLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3)
                             .addComponent(txtSenhaLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(txtEmailCadastroLayout.createSequentialGroup()
-                        .addGap(88, 88, 88)
-                        .addGroup(txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(69, Short.MAX_VALUE))
+                        .addGap(84, 84, 84)
+                        .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(txtEmailCadastroLayout.createSequentialGroup()
+                        .addGap(106, 106, 106)
+                        .addComponent(jLabel1)))
+                .addContainerGap(55, Short.MAX_VALUE))
         );
         txtEmailCadastroLayout.setVerticalGroup(
             txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -171,11 +169,11 @@ public class UIloginUsuario extends javax.swing.JFrame {
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtSenhaLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(94, 94, 94)
+                .addGap(66, 66, 66)
                 .addComponent(btnLogin, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel1)
-                .addGap(28, 28, 28))
+                .addGap(56, 56, 56))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -259,6 +257,7 @@ public class UIloginUsuario extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
@@ -280,7 +279,7 @@ public class UIloginUsuario extends javax.swing.JFrame {
     }//GEN-LAST:event_txtEmailLoginActionPerformed
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
-        UICadastroUsuario telaCadastro = new UICadastroUsuario();  
+        UICadastroUsuario telaCadastro = new UICadastroUsuario();
         this.dispose();
         telaCadastro.setVisible(true);
     }//GEN-LAST:event_jLabel1MouseClicked
@@ -299,17 +298,33 @@ public class UIloginUsuario extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(UIloginUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UILoginUsuario.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(UIloginUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UILoginUsuario.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(UIloginUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UILoginUsuario.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(UIloginUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UILoginUsuario.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -322,7 +337,7 @@ public class UIloginUsuario extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new UIloginUsuario().setVisible(true);
+                new UILoginUsuario().setVisible(true);
             }
         });
     }

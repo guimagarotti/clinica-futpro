@@ -20,15 +20,21 @@ public class UICadastroEmpresa extends javax.swing.JFrame {
         novaEmpresa.setEndereco(txtEnderecoCadastro.getText());
 
         try {
-            this.conectar.insertSQL(
-                    "INSERT INTO tb_empresas VALUES ("
-                    + "'" + novaEmpresa.getId() + "',"
-                    + "'" + novaEmpresa.getNome() + "',"
-                    + "'" + novaEmpresa.getRazao() + "',"
-                    + "'" + novaEmpresa.getCnpj() + "',"
-                    + "'" + novaEmpresa.getEndereco() + "'"
-                    + ");");
-            JOptionPane.showMessageDialog(null, "[OK]: Empresa cadastrada com sucesso!");
+            if (!novaEmpresa.getNome().isBlank() && !novaEmpresa.getRazao().isBlank() && !novaEmpresa.getCnpj().isBlank() && !novaEmpresa.getEndereco().isBlank()) {
+                this.conectar.insertSQL(
+                        "INSERT INTO tb_empresas VALUES ("
+                        + "'" + novaEmpresa.getId() + "',"
+                        + "'" + novaEmpresa.getNome() + "',"
+                        + "'" + novaEmpresa.getRazao() + "',"
+                        + "'" + novaEmpresa.getCnpj() + "',"
+                        + "'" + novaEmpresa.getEndereco() + "'"
+                        + ");");
+                JOptionPane.showMessageDialog(null, "[OK]: Empresa cadastrada com sucesso!");
+            }
+
+            if (novaEmpresa.getNome().isBlank() || novaEmpresa.getRazao().isBlank() || novaEmpresa.getCnpj().isBlank() || novaEmpresa.getEndereco().isBlank()) {
+                JOptionPane.showMessageDialog(null, "[ERRO]: Campos para cadastro de empresa vazios!");
+            }
         } catch (Exception e) {
             System.out.println("[ERRO]: Não foi possível cadastrar nova empresa! " + e.getMessage());
         } finally {
@@ -42,28 +48,28 @@ public class UICadastroEmpresa extends javax.swing.JFrame {
         String consultaCnpj = this.txtCnpjConsulta.getText();
 
         try {
-            this.conectar.executarSQL(
-                    "SELECT " + "nome," + "razao," + "endereco" + " FROM " + "tb_empresas"
-                    + " WHERE" + " cnpj = '" + consultaCnpj + "'" + ";"
-            );
-            while (this.conectar.getResultSet().next()) {
-                novaEmpresa.setNome(this.conectar.getResultSet().getString(1));
-                novaEmpresa.setRazao(this.conectar.getResultSet().getString(2));
-                novaEmpresa.setEndereco(this.conectar.getResultSet().getString(3));
-            }
+            if (!consultaCnpj.isEmpty()) {
+                this.conectar.executarSQL(
+                        "SELECT " + "nome," + "razao," + "endereco" + " FROM " + "tb_empresas"
+                        + " WHERE" + " cnpj = '" + consultaCnpj + "'" + ";"
+                );
 
-            if (novaEmpresa.getNome() == null) {
-                JOptionPane.showMessageDialog(null, "[ERRO]: Empresa não localizada!");
-                txtCnpjConsulta.setText("");
+                while (this.conectar.getResultSet().next()) {
+                    novaEmpresa.setNome(this.conectar.getResultSet().getString(1));
+                    novaEmpresa.setRazao(this.conectar.getResultSet().getString(2));
+                    novaEmpresa.setEndereco(this.conectar.getResultSet().getString(3));
+                }
+
+                txtConsultaNome.setText(novaEmpresa.getNome());
+                txtConsultaRazao.setText(novaEmpresa.getRazao());
+                txtConsultaEndereco.setText(novaEmpresa.getEndereco());
+            } else {
+                JOptionPane.showMessageDialog(null, "[ERRO]: Campo de consulta de CNPJ vazio!");
             }
         } catch (Exception e) {
-            System.out.println("Erro ao consultar empresa!" + e.getMessage());
+            System.out.println("Erro ao consultar empresa! " + e.getMessage());
             JOptionPane.showMessageDialog(null, "[ERRO]: Erro ao buscar empresa!");
         } finally {
-            txtConsultaNome.setText(novaEmpresa.getNome());
-            txtConsultaRazao.setText(novaEmpresa.getRazao());
-            txtConsultaEndereco.setText(novaEmpresa.getEndereco());
-
             this.conectar.fechaBanco();
         }
     }
@@ -82,13 +88,13 @@ public class UICadastroEmpresa extends javax.swing.JFrame {
                     + " WHERE" + " cnpj = '" + consultaCnpj + "'" + ";"
             );
 
-            if (novaEmpresa.getNome() == null) {
-                JOptionPane.showMessageDialog(null, "[ERRO]: Campos para busca de empresa vazios!");
+            if (txtConsultaNome.getText().isBlank() || txtConsultaRazao.getText().isBlank() || txtConsultaEndereco.getText().isBlank()) {
+                JOptionPane.showMessageDialog(null, "[ERRO]: Campos para atualização de empresa vazios!");
             } else {
                 JOptionPane.showMessageDialog(null, "[OK]: Empresa atualizada com sucesso!");
             }
         } catch (Exception e) {
-            System.out.println("Não foi possível atualizar a empresa!" + e.getMessage());
+            System.out.println("Não foi possível atualizar a empresa! " + e.getMessage());
             JOptionPane.showMessageDialog(null, "[ERRO]: Erro ao atualizar empresa!");
         } finally {
             this.conectar.fechaBanco();
@@ -104,14 +110,8 @@ public class UICadastroEmpresa extends javax.swing.JFrame {
             this.conectar.updateSQL(
                     "DELETE FROM tb_empresas WHERE cnpj = '" + consultaCnpj + "';"
             );
-
-            if (novaEmpresa.getNome() == null) {
-                JOptionPane.showMessageDialog(null, "[ERRO]: Campos para deleção de empresa vazios!");
-            } else {
-                JOptionPane.showMessageDialog(null, "[OK]: Empresa deletada com sucesso!");
-            }
         } catch (Exception e) {
-            System.out.println("Não foi possível deletar a empresa!" + e.getMessage());
+            System.out.println("Não foi possível deletar a empresa! " + e.getMessage());
             JOptionPane.showMessageDialog(null, "[ERRO]: Erro ao deletar empresa!");
         } finally {
             txtConsultaNome.setText("");
@@ -158,6 +158,7 @@ public class UICadastroEmpresa extends javax.swing.JFrame {
         txtEnderecoCadastro = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
         txtCnpjCadastro = new javax.swing.JTextField();
+        btnLimpa1 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -262,60 +263,77 @@ public class UICadastroEmpresa extends javax.swing.JFrame {
             }
         });
 
+        btnLimpa1.setBackground(new java.awt.Color(41, 144, 181));
+        btnLimpa1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnLimpa1.setForeground(new java.awt.Color(255, 255, 255));
+        btnLimpa1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/limpar-limpo.png"))); // NOI18N
+        btnLimpa1.setText("LIMPAR CAMPOS");
+        btnLimpa1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        btnLimpa1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpa1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout txtEmailCadastroLayout = new javax.swing.GroupLayout(txtEmailCadastro);
         txtEmailCadastro.setLayout(txtEmailCadastroLayout);
         txtEmailCadastroLayout.setHorizontalGroup(
             txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(txtEmailCadastroLayout.createSequentialGroup()
-                .addGap(59, 59, 59)
-                .addGroup(txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addGroup(txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jLabel8)
-                        .addComponent(jLabel3)
-                        .addComponent(jLabel9)
-                        .addComponent(txtNomeCadastro, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
-                        .addComponent(txtRazaoCadastro)
-                        .addComponent(txtEnderecoCadastro)
-                        .addComponent(txtCnpjCadastro)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtEmailCadastroLayout.createSequentialGroup()
-                .addContainerGap(118, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtEmailCadastroLayout.createSequentialGroup()
-                        .addComponent(btnCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(112, 112, 112))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtEmailCadastroLayout.createSequentialGroup()
-                        .addComponent(jLabel15)
-                        .addGap(95, 95, 95))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtEmailCadastroLayout.createSequentialGroup()
+                    .addGroup(txtEmailCadastroLayout.createSequentialGroup()
+                        .addGap(21, 21, 21)
                         .addComponent(jLabel7)
-                        .addGap(132, 132, 132))))
+                        .addGap(132, 132, 132))
+                    .addGroup(txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(btnLimpa1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnCadastro, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE))))
+            .addGroup(txtEmailCadastroLayout.createSequentialGroup()
+                .addGroup(txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(txtEmailCadastroLayout.createSequentialGroup()
+                        .addGap(60, 60, 60)
+                        .addGroup(txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addGroup(txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jLabel8)
+                                .addComponent(jLabel3)
+                                .addComponent(jLabel9)
+                                .addComponent(txtNomeCadastro, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
+                                .addComponent(txtRazaoCadastro)
+                                .addComponent(txtEnderecoCadastro)
+                                .addComponent(txtCnpjCadastro))))
+                    .addGroup(txtEmailCadastroLayout.createSequentialGroup()
+                        .addGap(102, 102, 102)
+                        .addComponent(jLabel15)))
+                .addContainerGap(60, Short.MAX_VALUE))
         );
         txtEmailCadastroLayout.setVerticalGroup(
             txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(txtEmailCadastroLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel7)
-                .addGap(96, 96, 96)
+                .addGap(64, 64, 64)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtNomeCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtRazaoCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtCnpjCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(17, 17, 17)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtEnderecoCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(104, 104, 104)
+                .addGap(49, 49, 49)
                 .addComponent(btnCadastro, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
-                .addGap(43, 43, 43)
+                .addGap(18, 18, 18)
+                .addComponent(btnLimpa1, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
+                .addGap(53, 53, 53)
                 .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -457,19 +475,13 @@ public class UICadastroEmpresa extends javax.swing.JFrame {
         txtEmailCadastro1.setLayout(txtEmailCadastro1Layout);
         txtEmailCadastro1Layout.setHorizontalGroup(
             txtEmailCadastro1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtEmailCadastro1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(txtEmailCadastro1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAtualiza, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(104, 104, 104))
             .addGroup(txtEmailCadastro1Layout.createSequentialGroup()
                 .addGroup(txtEmailCadastro1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(txtEmailCadastro1Layout.createSequentialGroup()
                         .addGap(125, 125, 125)
                         .addComponent(jLabel10))
                     .addGroup(txtEmailCadastro1Layout.createSequentialGroup()
-                        .addGap(50, 50, 50)
+                        .addGap(60, 60, 60)
                         .addGroup(txtEmailCadastro1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel12)
                             .addGroup(txtEmailCadastro1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -483,8 +495,13 @@ public class UICadastroEmpresa extends javax.swing.JFrame {
                                 .addComponent(txtConsultaNome)
                                 .addComponent(txtConsultaRazao)
                                 .addComponent(txtCnpjConsulta)
-                                .addComponent(txtConsultaEndereco)))))
-                .addContainerGap(47, Short.MAX_VALUE))
+                                .addComponent(txtConsultaEndereco))))
+                    .addGroup(txtEmailCadastro1Layout.createSequentialGroup()
+                        .addGap(117, 117, 117)
+                        .addGroup(txtEmailCadastro1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnAtualiza, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(60, Short.MAX_VALUE))
         );
         txtEmailCadastro1Layout.setVerticalGroup(
             txtEmailCadastro1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -511,10 +528,11 @@ public class UICadastroEmpresa extends javax.swing.JFrame {
                 .addComponent(jLabel11)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtConsultaEndereco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(70, 70, 70)
+                .addGap(65, 65, 65)
                 .addComponent(btnAtualiza, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
-                .addGap(22, 22, 22)
-                .addComponent(btnDelete, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(btnDelete, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
+                .addGap(9, 9, 9))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -549,9 +567,9 @@ public class UICadastroEmpresa extends javax.swing.JFrame {
                     .addGroup(kGradientPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(32, 32, 32)
+                .addGap(55, 55, 55)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(48, 48, 48)
+                .addGap(50, 50, 50)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(272, Short.MAX_VALUE))
         );
@@ -579,7 +597,7 @@ public class UICadastroEmpresa extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(kGradientPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 1, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -589,6 +607,7 @@ public class UICadastroEmpresa extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastroActionPerformed
@@ -596,7 +615,6 @@ public class UICadastroEmpresa extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 cadastraEmpresa(novaEmpresa);
-                LimpaCampos();
             }
         });
     }//GEN-LAST:event_btnCadastroActionPerformed
@@ -614,7 +632,6 @@ public class UICadastroEmpresa extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 buscaEmpresa(novaEmpresa);
-                LimpaCampos();
             }
         });
     }//GEN-LAST:event_btnBuscaActionPerformed
@@ -632,7 +649,6 @@ public class UICadastroEmpresa extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 atualizaEmpresa(novaEmpresa);
-                LimpaCamposConsulta();
             }
         });
     }//GEN-LAST:event_btnAtualizaActionPerformed
@@ -669,6 +685,15 @@ public class UICadastroEmpresa extends javax.swing.JFrame {
     private void txtConsultaEnderecoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtConsultaEnderecoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtConsultaEnderecoActionPerformed
+
+    private void btnLimpa1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpa1ActionPerformed
+        btnLimpa1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                LimpaCampos();
+            }
+        });
+    }//GEN-LAST:event_btnLimpa1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -714,6 +739,7 @@ public class UICadastroEmpresa extends javax.swing.JFrame {
     private javax.swing.JButton btnCadastro;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnLimpa;
+    private javax.swing.JButton btnLimpa1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

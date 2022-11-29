@@ -60,19 +60,25 @@ public class UICadastroServico extends javax.swing.JFrame {
         novoServico.setDescricao(txtDescricaoCadastro.getText());
 
         try {
-            this.conectar.insertSQL(
-                    "INSERT INTO tb_servicos VALUES ("
-                    + "'" + novoServico.getId() + "',"
-                    + "'" + novoServico.getHash() + "',"
-                    + "'" + novoServico.getEmpresa() + "',"
-                    + "'" + novoServico.getPrestador() + "',"
-                    + "'" + novoServico.getTipo() + "',"
-                    + "'" + novoServico.getQtd_horas() + "',"
-                    + "'" + novoServico.getDescricao() + "'"
-                    + ");");
-            JOptionPane.showMessageDialog(null, "[OK]: Serviço cadastrado com sucesso!");
+            if (!novoServico.getHash().isBlank() && !novoServico.getDescricao().isBlank()) {
+                this.conectar.insertSQL(
+                        "INSERT INTO tb_servicos VALUES ("
+                        + "'" + novoServico.getId() + "',"
+                        + "'" + novoServico.getHash() + "',"
+                        + "'" + novoServico.getEmpresa() + "',"
+                        + "'" + novoServico.getPrestador() + "',"
+                        + "'" + novoServico.getTipo() + "',"
+                        + "'" + novoServico.getQtd_horas() + "',"
+                        + "'" + novoServico.getDescricao() + "'"
+                        + ");");
+                JOptionPane.showMessageDialog(null, "[OK]: Serviço cadastrado com sucesso!");
+            }
+
+            if (novoServico.getHash().isBlank() || novoServico.getDescricao().isBlank()) {
+                JOptionPane.showMessageDialog(null, "[ERRO]: Campos para cadastro de serviço vazios!");
+            }
         } catch (Exception e) {
-            System.out.println("[ERRO]: Não foi possível cadastrar novo serviço! " + e.getMessage());
+            System.out.println("[ERRO]: Não foi possível cadastrar novo servico! " + e.getMessage());
         } finally {
             this.conectar.fechaBanco();
         }
@@ -84,26 +90,28 @@ public class UICadastroServico extends javax.swing.JFrame {
         String consultaHash = this.txtHashConsulta.getText();
 
         try {
-            this.conectar.executarSQL(
-                    "SELECT " + "tipo," + "empresa," + "prestador," + "qtd_horas," + "descricao" + " FROM " + "tb_servicos"
-                    + " WHERE" + " hash = '" + consultaHash + "'" + ";"
-            );
-            while (this.conectar.getResultSet().next()) {
-                novoServico.setTipo(this.conectar.getResultSet().getString(1));
-                cbxEmpresaConsulta.addItem(this.conectar.getResultSet().getString(2));
-                cbxPrestadorConsulta.addItem(this.conectar.getResultSet().getString(3));
-                novoServico.setQtd_horas(this.conectar.getResultSet().getDouble(4));
-                novoServico.setDescricao(this.conectar.getResultSet().getString(5));
-            }
+            if (!consultaHash.isEmpty()) {
+                this.conectar.executarSQL(
+                        "SELECT " + "tipo," + "empresa," + "prestador," + "qtd_horas," + "descricao" + " FROM " + "tb_servicos"
+                        + " WHERE" + " hash = '" + consultaHash + "'" + ";"
+                );
+                while (this.conectar.getResultSet().next()) {
+                    novoServico.setTipo(this.conectar.getResultSet().getString(1));
+                    novoServico.setEmpresa(this.conectar.getResultSet().getString(2));
+                    novoServico.setPrestador(this.conectar.getResultSet().getString(3));
+                    novoServico.setQtd_horas(this.conectar.getResultSet().getDouble(4));
+                    novoServico.setDescricao(this.conectar.getResultSet().getString(5));
+                }
 
-            if (novoServico.getTipo() == null) {
-                JOptionPane.showMessageDialog(null, "[ERRO]: Serviço não localizado!");
+                txtEmpresaConsulta.setText(novoServico.getEmpresa());
+                txtPrestadorConsulta.setText(novoServico.getPrestador());
+                txtHorasConsulta.setText(Double.toString(novoServico.getQtd_horas()));
+                txtDescricaoConsulta.setText(novoServico.getDescricao());
+            } else {
+                JOptionPane.showMessageDialog(null, "[ERRO]: Campo de consulta de HASH vazio!");
             }
-
-            txtHorasConsulta.setText(Double.toString(novoServico.getQtd_horas()));
-            txtDescricaoConsulta.setText(novoServico.getDescricao());
         } catch (Exception e) {
-            System.out.println("Erro ao consultar serviço!" + e.getMessage());
+            System.out.println("Erro ao consultar servico! " + e.getMessage());
             JOptionPane.showMessageDialog(null, "[ERRO]: Erro ao buscar serviço!");
         } finally {
             this.conectar.fechaBanco();
@@ -119,24 +127,20 @@ public class UICadastroServico extends javax.swing.JFrame {
             this.conectar.updateSQL(
                     "UPDATE tb_servicos SET tipo="
                     + "'" + cbxServicoConsulta.getSelectedItem() + "',"
-                    + " empresa =" + "'" + cbxEmpresaConsulta.getSelectedItem() + "',"
-                    + " prestador =" + "'" + cbxPrestadorConsulta.getSelectedItem() + "',"
+                    + " empresa =" + "'" + txtEmpresaConsulta.getText() + "',"
+                    + " prestador =" + "'" + txtPrestadorConsulta.getText() + "',"
                     + " qtd_horas =" + "'" + txtHorasConsulta.getText() + "',"
                     + " descricao =" + "'" + txtDescricaoConsulta.getText() + "'"
                     + " WHERE" + " hash = '" + consultaHash + "'" + ";"
             );
 
-            if (novoServico.getTipo() == null) {
+            if (txtEmpresaConsulta.getText().isBlank() || txtPrestadorConsulta.getText().isBlank() || txtHorasConsulta.getText().isBlank() || txtDescricaoConsulta.getText().isBlank()) {
                 JOptionPane.showMessageDialog(null, "[ERRO]: Campos para atualização de serviço vazios!");
             } else {
                 JOptionPane.showMessageDialog(null, "[OK]: Serviço atualizado com sucesso!");
             }
-
-            cbxEmpresaConsulta.setSelectedIndex(0);
-            cbxPrestadorConsulta.setSelectedIndex(0);
-            cbxServicoConsulta.setSelectedIndex(0);
         } catch (Exception e) {
-            System.out.println("Não foi possível atualizar a serviço!" + e.getMessage());
+            System.out.println("Não foi possível atualizar a servico! " + e.getMessage());
             JOptionPane.showMessageDialog(null, "[ERRO]: Erro ao atualizar serviço!");
         } finally {
             this.conectar.fechaBanco();
@@ -152,16 +156,6 @@ public class UICadastroServico extends javax.swing.JFrame {
             this.conectar.updateSQL(
                     "DELETE FROM tb_servicos WHERE hash = '" + consultaHash + "';"
             );
-
-            if (novoServico.getTipo() == null) {
-                JOptionPane.showMessageDialog(null, "[ERRO]: Campos para deleção de serviço vazios!");
-            } else {
-                JOptionPane.showMessageDialog(null, "[OK]: Serviço deletado com sucesso!");
-            }
-
-            cbxEmpresaConsulta.setSelectedIndex(0);
-            cbxPrestadorConsulta.setSelectedIndex(0);
-            cbxServicoConsulta.setSelectedIndex(0);
         } catch (Exception e) {
             System.out.println("Não foi possível deletar o servico! " + e.getMessage());
             JOptionPane.showMessageDialog(null, "[ERRO]: Erro ao deletar serviço!");
@@ -172,12 +166,22 @@ public class UICadastroServico extends javax.swing.JFrame {
 
     public void LimpaCampos() {
         txtCodigoCadastro.setText("");
+
+        cbxEmpresaCadastro.setSelectedIndex(0);
+        cbxPrestadorCadastro.setSelectedIndex(0);
+        cbxServicoCadastro.setSelectedIndex(0);
+
         txtHorasCadastro.setText("");
         txtDescricaoCadastro.setText("");
     }
 
     public void LimpaCamposConsulta() {
         txtHashConsulta.setText("");
+
+        cbxServicoConsulta.setSelectedIndex(0);
+
+        txtEmpresaConsulta.setText("");
+        txtPrestadorConsulta.setText("");
         txtHorasConsulta.setText("");
         txtDescricaoConsulta.setText("");
     }
@@ -209,9 +213,9 @@ public class UICadastroServico extends javax.swing.JFrame {
         cbxEmpresaCadastro = new javax.swing.JComboBox<>();
         cbxPrestadorCadastro = new javax.swing.JComboBox<>();
         cbxServicoCadastro = new javax.swing.JComboBox<>();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel22 = new javax.swing.JLabel();
+        btnLimpa1 = new javax.swing.JButton();
         jLabel23 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -228,13 +232,13 @@ public class UICadastroServico extends javax.swing.JFrame {
         btnLimpa = new javax.swing.JButton();
         jLabel15 = new javax.swing.JLabel();
         txtDescricaoConsulta = new javax.swing.JTextField();
-        cbxEmpresaConsulta = new javax.swing.JComboBox<>();
         jLabel20 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
-        cbxPrestadorConsulta = new javax.swing.JComboBox<>();
         txtHorasConsulta = new javax.swing.JTextField();
         jLabel16 = new javax.swing.JLabel();
         cbxServicoConsulta = new javax.swing.JComboBox<>();
+        txtEmpresaConsulta = new javax.swing.JTextField();
+        txtPrestadorConsulta = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -329,12 +333,15 @@ public class UICadastroServico extends javax.swing.JFrame {
         cbxServicoCadastro.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Serviços Disponíveis", "Massagista", "Nutricionista", "Fisioterapeuta" }));
         cbxServicoCadastro.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(41, 144, 181)));
 
-        jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel11.setForeground(new java.awt.Color(41, 144, 141));
-        jLabel11.setText("Cadastrar Nova Empresa? Clique aqui");
-        jLabel11.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel11MouseClicked(evt);
+        btnLimpa1.setBackground(new java.awt.Color(41, 144, 181));
+        btnLimpa1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnLimpa1.setForeground(new java.awt.Color(255, 255, 255));
+        btnLimpa1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/limpar-limpo.png"))); // NOI18N
+        btnLimpa1.setText("LIMPAR CAMPOS");
+        btnLimpa1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        btnLimpa1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpa1ActionPerformed(evt);
             }
         });
 
@@ -342,12 +349,8 @@ public class UICadastroServico extends javax.swing.JFrame {
         txtEmailCadastro.setLayout(txtEmailCadastroLayout);
         txtEmailCadastroLayout.setHorizontalGroup(
             txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtEmailCadastroLayout.createSequentialGroup()
-                .addGap(0, 125, Short.MAX_VALUE)
-                .addComponent(jLabel7)
-                .addGap(101, 101, 101))
             .addGroup(txtEmailCadastroLayout.createSequentialGroup()
-                .addGap(59, 59, 59)
+                .addGap(50, 50, 50)
                 .addGroup(txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(cbxEmpresaCadastro, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel19)
@@ -361,16 +364,18 @@ public class UICadastroServico extends javax.swing.JFrame {
                     .addComponent(cbxPrestadorCadastro, 0, 347, Short.MAX_VALUE)
                     .addComponent(cbxServicoCadastro, 0, 347, Short.MAX_VALUE)
                     .addComponent(txtHorasCadastro))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtEmailCadastroLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtEmailCadastroLayout.createSequentialGroup()
-                        .addComponent(btnCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(88, 88, 88))
+                        .addComponent(jLabel7)
+                        .addGap(92, 92, 92))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtEmailCadastroLayout.createSequentialGroup()
-                        .addComponent(jLabel11)
-                        .addGap(76, 76, 76))))
+                        .addGroup(txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnLimpa1, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(73, 73, 73))))
         );
         txtEmailCadastroLayout.setVerticalGroup(
             txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -381,35 +386,32 @@ public class UICadastroServico extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtCodigoCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel19)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbxEmpresaCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
-                .addComponent(jLabel3)
                 .addGap(18, 18, 18)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbxPrestadorCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbxServicoCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel17)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtHorasCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtDescricaoCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(44, 44, 44)
-                .addComponent(btnCadastro, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+                .addComponent(btnCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel11))
+                .addComponent(btnLimpa1, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(33, 33, 33))
         );
-
-        jLabel22.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel22.setForeground(new java.awt.Color(41, 144, 141));
-        jLabel22.setText("Não tem Login? Faça seu cadastro");
 
         jLabel23.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel23.setForeground(new java.awt.Color(41, 144, 141));
@@ -420,38 +422,42 @@ public class UICadastroServico extends javax.swing.JFrame {
             }
         });
 
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(41, 144, 141));
+        jLabel11.setText("Cadastrar Nova Empresa? Clique aqui");
+        jLabel11.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel11MouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(txtEmailCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(99, 99, 99)
-                        .addComponent(jLabel23)))
+                .addContainerGap()
+                .addComponent(txtEmailCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(36, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel1Layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(jLabel22)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel23)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(jLabel11)))
+                .addGap(96, 96, 96))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(txtEmailCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel23)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel1Layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(jLabel22)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel11)
+                .addContainerGap(33, Short.MAX_VALUE))
         );
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/Futpro_logo2__3_-removebg-preview (1).png"))); // NOI18N
@@ -554,10 +560,6 @@ public class UICadastroServico extends javax.swing.JFrame {
             }
         });
 
-        cbxEmpresaConsulta.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cbxEmpresaConsulta.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Empresa Selecionada" }));
-        cbxEmpresaConsulta.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(41, 144, 181)));
-
         jLabel20.setBackground(new java.awt.Color(255, 255, 255));
         jLabel20.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel20.setForeground(new java.awt.Color(41, 144, 181));
@@ -567,10 +569,6 @@ public class UICadastroServico extends javax.swing.JFrame {
         jLabel12.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel12.setForeground(new java.awt.Color(41, 144, 181));
         jLabel12.setText("Prestador");
-
-        cbxPrestadorConsulta.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cbxPrestadorConsulta.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Prestador Selecionado" }));
-        cbxPrestadorConsulta.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(41, 144, 181)));
 
         txtHorasConsulta.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtHorasConsulta.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(41, 144, 181)));
@@ -589,43 +587,60 @@ public class UICadastroServico extends javax.swing.JFrame {
         cbxServicoConsulta.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Serviços Disponíveis", "Massagista", "Nutricionista", "Fisioterapeuta" }));
         cbxServicoConsulta.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(41, 144, 181)));
 
+        txtEmpresaConsulta.setEditable(false);
+        txtEmpresaConsulta.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtEmpresaConsulta.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(41, 144, 181)));
+        txtEmpresaConsulta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtEmpresaConsultaActionPerformed(evt);
+            }
+        });
+
+        txtPrestadorConsulta.setEditable(false);
+        txtPrestadorConsulta.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtPrestadorConsulta.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(41, 144, 181)));
+        txtPrestadorConsulta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPrestadorConsultaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout txtEmailCadastro1Layout = new javax.swing.GroupLayout(txtEmailCadastro1);
         txtEmailCadastro1.setLayout(txtEmailCadastro1Layout);
         txtEmailCadastro1Layout.setHorizontalGroup(
             txtEmailCadastro1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(txtEmailCadastro1Layout.createSequentialGroup()
-                .addGroup(txtEmailCadastro1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(cbxServicoConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtHashConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(txtEmailCadastro1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(txtEmailCadastro1Layout.createSequentialGroup()
-                            .addGap(30, 30, 30)
+                .addGroup(txtEmailCadastro1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(txtEmailCadastro1Layout.createSequentialGroup()
+                        .addGap(50, 50, 50)
+                        .addGroup(txtEmailCadastro1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtHashConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(txtEmailCadastro1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addGroup(txtEmailCadastro1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jLabel15)
                                     .addComponent(jLabel13)
-                                    .addComponent(txtDescricaoConsulta)
+                                    .addComponent(txtDescricaoConsulta, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
                                     .addComponent(jLabel14)
-                                    .addComponent(cbxEmpresaConsulta, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jLabel20)
                                     .addComponent(jLabel12)
-                                    .addComponent(cbxPrestadorConsulta, 0, 313, Short.MAX_VALUE)
-                                    .addComponent(txtHorasConsulta))
+                                    .addComponent(txtHorasConsulta)
+                                    .addComponent(txtEmpresaConsulta)
+                                    .addComponent(txtPrestadorConsulta))
                                 .addGroup(txtEmailCadastro1Layout.createSequentialGroup()
                                     .addComponent(btnBusca, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGap(45, 45, 45)
                                     .addComponent(btnLimpa, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(jLabel16, javax.swing.GroupLayout.Alignment.LEADING)))
-                        .addGroup(txtEmailCadastro1Layout.createSequentialGroup()
-                            .addGap(91, 91, 91)
-                            .addGroup(txtEmailCadastro1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(btnAtualiza, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(30, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtEmailCadastro1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabel10)
-                .addGap(109, 109, 109))
+                                .addComponent(jLabel16, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(cbxServicoConsulta, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(txtEmailCadastro1Layout.createSequentialGroup()
+                        .addGap(130, 130, 130)
+                        .addComponent(jLabel10))
+                    .addGroup(txtEmailCadastro1Layout.createSequentialGroup()
+                        .addGap(104, 104, 104)
+                        .addGroup(txtEmailCadastro1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnAtualiza, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
         txtEmailCadastro1Layout.setVerticalGroup(
             txtEmailCadastro1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -638,19 +653,19 @@ public class UICadastroServico extends javax.swing.JFrame {
                 .addComponent(txtHashConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(txtEmailCadastro1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnBusca, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnLimpa, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(20, 20, 20)
+                    .addComponent(btnLimpa, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBusca, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addComponent(jLabel20)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbxEmpresaConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(txtEmpresaConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(22, 22, 22)
                 .addComponent(jLabel12)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbxPrestadorConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtPrestadorConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(10, 10, 10)
                 .addComponent(cbxServicoConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel16)
@@ -660,9 +675,9 @@ public class UICadastroServico extends javax.swing.JFrame {
                 .addComponent(jLabel15)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtDescricaoConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
+                .addGap(47, 47, 47)
                 .addComponent(btnAtualiza, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnDelete, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
                 .addContainerGap())
         );
@@ -681,7 +696,7 @@ public class UICadastroServico extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(txtEmailCadastro1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(42, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout kGradientPanel1Layout = new javax.swing.GroupLayout(kGradientPanel1);
@@ -699,16 +714,16 @@ public class UICadastroServico extends javax.swing.JFrame {
                     .addGroup(kGradientPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(32, 32, 32)
+                .addGap(55, 55, 55)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(50, 50, 50)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(272, Short.MAX_VALUE))
+                .addContainerGap(240, Short.MAX_VALUE))
         );
         kGradientPanel1Layout.setVerticalGroup(
             kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(kGradientPanel1Layout.createSequentialGroup()
-                .addGap(53, 53, 53)
+                .addGap(50, 50, 50)
                 .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(kGradientPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -720,7 +735,7 @@ public class UICadastroServico extends javax.swing.JFrame {
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(123, Short.MAX_VALUE))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -739,6 +754,7 @@ public class UICadastroServico extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastroActionPerformed
@@ -746,7 +762,6 @@ public class UICadastroServico extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 cadastraServico(novoServico);
-                LimpaCampos();
             }
         });
     }//GEN-LAST:event_btnCadastroActionPerformed
@@ -760,7 +775,6 @@ public class UICadastroServico extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 buscaServico(novoServico);
-                LimpaCampos();
             }
         });
     }//GEN-LAST:event_btnBuscaActionPerformed
@@ -774,7 +788,6 @@ public class UICadastroServico extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 atualizaServico(novoServico);
-                LimpaCamposConsulta();
             }
         });
     }//GEN-LAST:event_btnAtualizaActionPerformed
@@ -825,6 +838,23 @@ public class UICadastroServico extends javax.swing.JFrame {
         this.dispose();
         telaCadastroPrestador.setVisible(true);
     }//GEN-LAST:event_jLabel23MouseClicked
+
+    private void btnLimpa1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpa1ActionPerformed
+        btnLimpa1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                LimpaCampos();
+            }
+        });
+    }//GEN-LAST:event_btnLimpa1ActionPerformed
+
+    private void txtEmpresaConsultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmpresaConsultaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtEmpresaConsultaActionPerformed
+
+    private void txtPrestadorConsultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrestadorConsultaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPrestadorConsultaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -882,10 +912,9 @@ public class UICadastroServico extends javax.swing.JFrame {
     private javax.swing.JButton btnCadastro;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnLimpa;
+    private javax.swing.JButton btnLimpa1;
     private javax.swing.JComboBox<String> cbxEmpresaCadastro;
-    private javax.swing.JComboBox<String> cbxEmpresaConsulta;
     private javax.swing.JComboBox<String> cbxPrestadorCadastro;
-    private javax.swing.JComboBox<String> cbxPrestadorConsulta;
     private javax.swing.JComboBox<String> cbxServicoCadastro;
     private javax.swing.JComboBox<String> cbxServicoConsulta;
     private javax.swing.JLabel jLabel1;
@@ -900,7 +929,6 @@ public class UICadastroServico extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -917,8 +945,10 @@ public class UICadastroServico extends javax.swing.JFrame {
     private javax.swing.JTextField txtDescricaoConsulta;
     private javax.swing.JPanel txtEmailCadastro;
     private javax.swing.JPanel txtEmailCadastro1;
+    private javax.swing.JTextField txtEmpresaConsulta;
     private javax.swing.JTextField txtHashConsulta;
     private javax.swing.JTextField txtHorasCadastro;
     private javax.swing.JTextField txtHorasConsulta;
+    private javax.swing.JTextField txtPrestadorConsulta;
     // End of variables declaration//GEN-END:variables
 }

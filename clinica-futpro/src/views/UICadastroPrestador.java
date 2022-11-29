@@ -18,20 +18,26 @@ public class UICadastroPrestador extends javax.swing.JFrame {
         novoPrestador.setEmail(txtemailCadastroPrest.getText());
         String password = String.valueOf(txtSenhaCadastroPrest.getPassword());
         novoPrestador.setSenha(password);
-        novoPrestador.setCpf((String) txtCpfCadastroPrest.getText());
+        novoPrestador.setCpf(txtCpfCadastroPrest.getText());
         novoPrestador.setProfissao((String) cbxProfissao.getSelectedItem());
 
         try {
-            this.conectar.insertSQL(
-                    "INSERT INTO tb_prestadores VALUES ("
-                    + "'" + novoPrestador.getId() + "',"
-                    + "'" + novoPrestador.getNome() + "',"
-                    + "'" + novoPrestador.getEmail() + "',"
-                    + "'" + novoPrestador.getSenha() + "',"
-                    + "'" + novoPrestador.getCpf() + "',"
-                    + "'" + novoPrestador.getProfissao() + "'"
-                    + ");");
-            JOptionPane.showMessageDialog(null, "[OK]: Prestador cadastrado com sucesso!");
+            if (!novoPrestador.getNome().isBlank() && !novoPrestador.getEmail().isBlank() && !novoPrestador.getSenha().isBlank() && !novoPrestador.getCpf().isBlank()) {
+                this.conectar.insertSQL(
+                        "INSERT INTO tb_prestadores VALUES ("
+                        + "'" + novoPrestador.getId() + "',"
+                        + "'" + novoPrestador.getNome() + "',"
+                        + "'" + novoPrestador.getEmail() + "',"
+                        + "'" + novoPrestador.getSenha() + "',"
+                        + "'" + novoPrestador.getCpf() + "',"
+                        + "'" + novoPrestador.getProfissao() + "'"
+                        + ");");
+                JOptionPane.showMessageDialog(null, "[OK]: Prestador cadastrado com sucesso!");
+            }
+
+            if (novoPrestador.getNome().isBlank() || novoPrestador.getEmail().isBlank() || novoPrestador.getSenha().isBlank() || novoPrestador.getCpf().isBlank()) {
+                JOptionPane.showMessageDialog(null, "[ERRO]: Campos para cadastro de prestador vazios!");
+            }
         } catch (Exception e) {
             System.out.println("[ERRO]: Não foi possível cadastrar novo prestador! " + e.getMessage());
         } finally {
@@ -45,30 +51,29 @@ public class UICadastroPrestador extends javax.swing.JFrame {
         String consultaCpf = this.txtCpfConsultaPrest.getText();
 
         try {
-            this.conectar.executarSQL(
-                    "SELECT " + "nome," + "email," + "senha," + "profissao" + " FROM " + "tb_prestadores"
-                    + " WHERE" + " cpf = '" + consultaCpf + "'" + ";"
-            );
-            while (this.conectar.getResultSet().next()) {
-                novoPrestador.setNome(this.conectar.getResultSet().getString(1));
-                novoPrestador.setEmail(this.conectar.getResultSet().getString(2));
-                novoPrestador.setSenha(this.conectar.getResultSet().getString(3));
-                novoPrestador.setProfissao(this.conectar.getResultSet().getString(4));
-            }
+            if (!consultaCpf.isEmpty()) {
+                this.conectar.executarSQL(
+                        "SELECT " + "nome," + "email," + "senha," + "profissao" + " FROM " + "tb_prestadores"
+                        + " WHERE" + " cpf = '" + consultaCpf + "'" + ";"
+                );
+                while (this.conectar.getResultSet().next()) {
+                    novoPrestador.setNome(this.conectar.getResultSet().getString(1));
+                    novoPrestador.setEmail(this.conectar.getResultSet().getString(2));
+                    novoPrestador.setSenha(this.conectar.getResultSet().getString(3));
+                    novoPrestador.setProfissao(this.conectar.getResultSet().getString(4));
+                }
 
-            if (novoPrestador.getNome() == null) {
-                JOptionPane.showMessageDialog(null, "[ERRO]: Prestador não localizado!");
-                txtCpfConsultaPrest.setText("");
+                txtConsultaNomePrest.setText(novoPrestador.getNome());
+                txtConsultaEmailPrest.setText(novoPrestador.getEmail());
+                txtConsultaSenhaPrest.setText(novoPrestador.getSenha());
+                txtConsultaProfissao.setText(novoPrestador.getProfissao());
+            } else {
+                JOptionPane.showMessageDialog(null, "[ERRO]: Campo de consulta de CPF vazio!");
             }
         } catch (Exception e) {
-            System.out.println("Erro ao consultar prestador!" + e.getMessage());
+            System.out.println("Erro ao consultar prestador! " + e.getMessage());
             JOptionPane.showMessageDialog(null, "[ERRO]: Erro ao buscar prestador!");
         } finally {
-            txtConsultaNomePrest.setText(novoPrestador.getNome());
-            txtConsultaEmailPrest.setText(novoPrestador.getEmail());
-            txtConsultaSenhaPrest.setText(novoPrestador.getSenha());
-            txtConsultaProfissao.setText(novoPrestador.getProfissao());
-
             this.conectar.fechaBanco();
         }
     }
@@ -87,13 +92,13 @@ public class UICadastroPrestador extends javax.swing.JFrame {
                     + " WHERE" + " cpf = '" + consultaCpf + "'" + ";"
             );
 
-            if (novoPrestador.getNome() == null) {
-                JOptionPane.showMessageDialog(null, "[ERRO]: Campos para busca de prestador vazios!");
+            if (txtConsultaNomePrest.getText().isBlank() || txtConsultaEmailPrest.getText().isBlank() || txtConsultaProfissao.getText().isBlank()) {
+                JOptionPane.showMessageDialog(null, "[ERRO]: Campos para atualização de prestador vazios!");
             } else {
                 JOptionPane.showMessageDialog(null, "[OK]: Prestador atualizado com sucesso!");
             }
         } catch (Exception e) {
-            System.out.println("Não foi possível atualizar o prestador!" + e.getMessage());
+            System.out.println("Não foi possível atualizar o prestador! " + e.getMessage());
             JOptionPane.showMessageDialog(null, "[ERRO]: Erro ao atualizar prestador!");
         } finally {
             this.conectar.fechaBanco();
@@ -109,14 +114,8 @@ public class UICadastroPrestador extends javax.swing.JFrame {
             this.conectar.updateSQL(
                     "DELETE FROM tb_prestadores WHERE cpf = '" + consultaCpf + "';"
             );
-
-            if (novoPrestador.getNome() == null) {
-                JOptionPane.showMessageDialog(null, "[ERRO]: Campos para deleção de prestador vazios!");
-            } else {
-                JOptionPane.showMessageDialog(null, "[OK]: Prestador deletado com sucesso!");
-            }
         } catch (Exception e) {
-            System.out.println("Não foi possível deletar o prestador!" + e.getMessage());
+            System.out.println("Não foi possível deletar o prestador! " + e.getMessage());
             JOptionPane.showMessageDialog(null, "[ERRO]: Erro ao deletar prestador!");
         } finally {
             txtConsultaNomePrest.setText("");
@@ -166,6 +165,7 @@ public class UICadastroPrestador extends javax.swing.JFrame {
         jLabel16 = new javax.swing.JLabel();
         cbxProfissao = new javax.swing.JComboBox<>();
         jLabel15 = new javax.swing.JLabel();
+        btnLimpaPrest1 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -281,6 +281,18 @@ public class UICadastroPrestador extends javax.swing.JFrame {
             }
         });
 
+        btnLimpaPrest1.setBackground(new java.awt.Color(41, 144, 181));
+        btnLimpaPrest1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnLimpaPrest1.setForeground(new java.awt.Color(255, 255, 255));
+        btnLimpaPrest1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/limpar-limpo.png"))); // NOI18N
+        btnLimpaPrest1.setText("LIMPAR CAMPOS");
+        btnLimpaPrest1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        btnLimpaPrest1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpaPrest1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout txtEmailCadastroLayout = new javax.swing.GroupLayout(txtEmailCadastro);
         txtEmailCadastro.setLayout(txtEmailCadastroLayout);
         txtEmailCadastroLayout.setHorizontalGroup(
@@ -311,11 +323,13 @@ public class UICadastroPrestador extends javax.swing.JFrame {
                         .addComponent(jLabel7)
                         .addGap(101, 101, 101))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtEmailCadastroLayout.createSequentialGroup()
-                        .addComponent(btnCadastroPrest, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(92, 92, 92))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtEmailCadastroLayout.createSequentialGroup()
                         .addComponent(jLabel15)
-                        .addGap(69, 69, 69))))
+                        .addGap(71, 71, 71))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtEmailCadastroLayout.createSequentialGroup()
+                        .addGroup(txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(btnLimpaPrest1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnCadastroPrest, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE))
+                        .addGap(92, 92, 92))))
         );
         txtEmailCadastroLayout.setVerticalGroup(
             txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -342,11 +356,12 @@ public class UICadastroPrestador extends javax.swing.JFrame {
                 .addComponent(jLabel16)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbxProfissao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(62, 62, 62)
+                .addGap(45, 45, 45)
                 .addComponent(btnCadastroPrest, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
-                .addGap(29, 29, 29)
-                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(50, 50, 50))
+                .addGap(18, 18, 18)
+                .addComponent(btnLimpaPrest1, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
+                .addGap(28, 28, 28)
+                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -487,6 +502,7 @@ public class UICadastroPrestador extends javax.swing.JFrame {
         jLabel17.setForeground(new java.awt.Color(41, 144, 181));
         jLabel17.setText("Profissão");
 
+        txtConsultaProfissao.setEditable(false);
         txtConsultaProfissao.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtConsultaProfissao.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(41, 144, 181)));
         txtConsultaProfissao.addActionListener(new java.awt.event.ActionListener() {
@@ -578,7 +594,7 @@ public class UICadastroPrestador extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(txtEmailCadastro1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(42, Short.MAX_VALUE))
+                .addContainerGap(46, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout kGradientPanel1Layout = new javax.swing.GroupLayout(kGradientPanel1);
@@ -596,9 +612,9 @@ public class UICadastroPrestador extends javax.swing.JFrame {
                     .addGroup(kGradientPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(56, 56, 56)
+                .addGap(55, 55, 55)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(50, 50, 50)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(248, Short.MAX_VALUE))
         );
@@ -636,6 +652,7 @@ public class UICadastroPrestador extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCadastroPrestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastroPrestActionPerformed
@@ -643,7 +660,6 @@ public class UICadastroPrestador extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 cadastraPrestador(novoPrestador);
-                LimpaCampos();
             }
         });
     }//GEN-LAST:event_btnCadastroPrestActionPerformed
@@ -665,7 +681,6 @@ public class UICadastroPrestador extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 buscaPrestador(novoPrestador);
-                LimpaCampos();
             }
         });
     }//GEN-LAST:event_btnBuscaPrestActionPerformed
@@ -687,7 +702,6 @@ public class UICadastroPrestador extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 atualizaPrestador(novoPrestador);
-                LimpaCamposConsulta();
             }
         });
     }//GEN-LAST:event_btnAtualizaPrestActionPerformed
@@ -720,6 +734,15 @@ public class UICadastroPrestador extends javax.swing.JFrame {
         this.dispose();
         telaCadastroServico.setVisible(true);
     }//GEN-LAST:event_jLabel15MouseClicked
+
+    private void btnLimpaPrest1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpaPrest1ActionPerformed
+        btnLimpaPrest1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                LimpaCampos();
+            }
+        });
+    }//GEN-LAST:event_btnLimpaPrest1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -769,6 +792,7 @@ public class UICadastroPrestador extends javax.swing.JFrame {
     private javax.swing.JButton btnCadastroPrest;
     private javax.swing.JButton btnDeletePrest;
     private javax.swing.JButton btnLimpaPrest;
+    private javax.swing.JButton btnLimpaPrest1;
     private javax.swing.JComboBox<String> cbxProfissao;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;

@@ -21,17 +21,23 @@ public class UICadastroUsuario extends javax.swing.JFrame {
         novoCliente.setCpf((String) txtCpfCadastro.getText());
 
         try {
-            this.conectar.insertSQL(
-                    "INSERT INTO tb_cadastro VALUES ("
-                    + "'" + novoCliente.getId() + "',"
-                    + "'" + novoCliente.getNome() + "',"
-                    + "'" + novoCliente.getEmail() + "',"
-                    + "'" + novoCliente.getSenha() + "',"
-                    + "'" + novoCliente.getCpf() + "'"
-                    + ");");
-            JOptionPane.showMessageDialog(null, "[OK]: Cliente cadastrado com sucesso!");
+            if (!novoCliente.getNome().isBlank() && !novoCliente.getEmail().isBlank() && !novoCliente.getSenha().isBlank() && !novoCliente.getCpf().isBlank()) {
+                this.conectar.insertSQL(
+                        "INSERT INTO tb_usuarios VALUES ("
+                        + "'" + novoCliente.getId() + "',"
+                        + "'" + novoCliente.getNome() + "',"
+                        + "'" + novoCliente.getEmail() + "',"
+                        + "'" + novoCliente.getSenha() + "',"
+                        + "'" + novoCliente.getCpf() + "'"
+                        + ");");
+                JOptionPane.showMessageDialog(null, "[OK]: Usuário cadastrado com sucesso!");
+            }
+
+            if (novoCliente.getNome().isBlank() || novoCliente.getEmail().isBlank() || novoCliente.getSenha().isBlank() || novoCliente.getCpf().isBlank()) {
+                JOptionPane.showMessageDialog(null, "[ERRO]: Campos para cadastro de usuário vazios!");
+            }
         } catch (Exception e) {
-            System.out.println("[ERRO]: Não foi possível cadastrar novo cliente! " + e.getMessage());
+            System.out.println("[ERRO]: Não foi possível cadastrar novo usuário! " + e.getMessage());
         } finally {
             this.conectar.fechaBanco();
         }
@@ -43,28 +49,27 @@ public class UICadastroUsuario extends javax.swing.JFrame {
         String consultaCpf = this.txtCpfConsulta.getText();
 
         try {
-            this.conectar.executarSQL(
-                    "SELECT " + "nome," + "email," + "senha" + " FROM " + "tb_cadastro"
-                    + " WHERE" + " cpf = '" + consultaCpf + "'" + ";"
-            );
-            while (this.conectar.getResultSet().next()) {
-                novoCliente.setNome(this.conectar.getResultSet().getString(1));
-                novoCliente.setEmail(this.conectar.getResultSet().getString(2));
-                novoCliente.setSenha(this.conectar.getResultSet().getString(3));
-            }
+            if (!consultaCpf.isEmpty()) {
+                this.conectar.executarSQL(
+                        "SELECT " + "nome," + "email," + "senha" + " FROM " + "tb_usuarios"
+                        + " WHERE" + " cpf = '" + consultaCpf + "'" + ";"
+                );
+                while (this.conectar.getResultSet().next()) {
+                    novoCliente.setNome(this.conectar.getResultSet().getString(1));
+                    novoCliente.setEmail(this.conectar.getResultSet().getString(2));
+                    novoCliente.setSenha(this.conectar.getResultSet().getString(3));
+                }
 
-            if (novoCliente.getNome() == null) {
-                JOptionPane.showMessageDialog(null, "[ERRO]: Cliente não localizado!");
-                txtCpfConsulta.setText("");
+                txtConsultaNome.setText(novoCliente.getNome());
+                txtConsultaEmail.setText(novoCliente.getEmail());
+                txtConsultaSenha.setText(novoCliente.getSenha());
+            } else {
+                JOptionPane.showMessageDialog(null, "[ERRO]: Campo de consulta de CPF vazio!");
             }
         } catch (Exception e) {
-            System.out.println("Erro ao consultar cliente!" + e.getMessage());
-            JOptionPane.showMessageDialog(null, "Erro ao buscar cliente!");
+            System.out.println("Erro ao consultar usuário! " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "[ERRO]: Erro ao buscar usuário!");
         } finally {
-            txtConsultaNome.setText(novoCliente.getNome());
-            txtConsultaEmail.setText(novoCliente.getEmail());
-            txtConsultaSenha.setText(novoCliente.getSenha());
-
             this.conectar.fechaBanco();
         }
     }
@@ -76,21 +81,21 @@ public class UICadastroUsuario extends javax.swing.JFrame {
 
         try {
             this.conectar.updateSQL(
-                    "UPDATE tb_cadastro SET nome="
+                    "UPDATE tb_usuarios SET nome="
                     + "'" + txtConsultaNome.getText() + "',"
                     + " email =" + "'" + txtConsultaEmail.getText() + "', "
                     + " senha =" + "'" + String.valueOf(txtConsultaSenha.getPassword()) + "'"
                     + " WHERE" + " cpf = '" + consultaCpf + "'" + ";"
             );
 
-            if (novoCliente.getNome() == null) {
-                JOptionPane.showMessageDialog(null, "[ERRO]: Campos para busca de cliente vazios!");
+            if (txtConsultaNome.getText().isBlank() || txtConsultaEmail.getText().isBlank()) {
+                JOptionPane.showMessageDialog(null, "[ERRO]: Campos para atualização de usuário vazios!");
             } else {
-                JOptionPane.showMessageDialog(null, "[OK]: Cliente atualizado com sucesso!");
+                JOptionPane.showMessageDialog(null, "[OK]: Usuário atualizado com sucesso!");
             }
         } catch (Exception e) {
-            System.out.println("Não foi possível atualizar o cliente!" + e.getMessage());
-            JOptionPane.showMessageDialog(null, "[ERRO]: Erro ao atualizar cliente!");
+            System.out.println("Não foi possível atualizar o usuário! " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "[ERRO]: Erro ao atualizar usuário!");
         } finally {
             this.conectar.fechaBanco();
         }
@@ -103,17 +108,11 @@ public class UICadastroUsuario extends javax.swing.JFrame {
 
         try {
             this.conectar.updateSQL(
-                    "DELETE FROM tb_cadastro WHERE cpf = '" + consultaCpf + "';"
+                    "DELETE FROM tb_usuarios WHERE cpf = '" + consultaCpf + "';"
             );
-            
-            if (novoCliente.getNome() == null) {
-                JOptionPane.showMessageDialog(null, "[ERRO]: Campos para deleção de cliente vazios!");
-            } else {
-                JOptionPane.showMessageDialog(null, "[OK]: Cliente deletado com sucesso!");
-            }
         } catch (Exception e) {
-            System.out.println("Não foi possível deletar o cliente!" + e.getMessage());
-            JOptionPane.showMessageDialog(null, "[ERRO]: Erro ao deletar cliente!");
+            System.out.println("Não foi possível deletar o usuário! " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "[ERRO]: Erro ao deletar usuário!");
         } finally {
             txtConsultaNome.setText("");
             txtConsultaEmail.setText("");
@@ -159,6 +158,7 @@ public class UICadastroUsuario extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         txtCpfCadastro = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
+        btnLimpa1 = new javax.swing.JButton();
         jLabel16 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -264,22 +264,37 @@ public class UICadastroUsuario extends javax.swing.JFrame {
             }
         });
 
+        btnLimpa1.setBackground(new java.awt.Color(41, 144, 181));
+        btnLimpa1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnLimpa1.setForeground(new java.awt.Color(255, 255, 255));
+        btnLimpa1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/limpar-limpo.png"))); // NOI18N
+        btnLimpa1.setText("LIMPAR CAMPOS");
+        btnLimpa1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        btnLimpa1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpa1ActionPerformed(evt);
+            }
+        });
+
+        jLabel16.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel16.setForeground(new java.awt.Color(41, 144, 141));
+        jLabel16.setText("Quero ser prestador");
+        jLabel16.setToolTipText("");
+        jLabel16.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(41, 144, 181)));
+        jLabel16.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel16MouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout txtEmailCadastroLayout = new javax.swing.GroupLayout(txtEmailCadastro);
         txtEmailCadastro.setLayout(txtEmailCadastroLayout);
         txtEmailCadastroLayout.setHorizontalGroup(
             txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtEmailCadastroLayout.createSequentialGroup()
-                .addGap(0, 109, Short.MAX_VALUE)
-                .addGroup(txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtEmailCadastroLayout.createSequentialGroup()
-                        .addComponent(jLabel15)
-                        .addGap(104, 104, 104))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtEmailCadastroLayout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addGap(101, 101, 101))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtEmailCadastroLayout.createSequentialGroup()
-                        .addComponent(btnCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(85, 85, 85))))
+                .addGap(0, 119, Short.MAX_VALUE)
+                .addComponent(jLabel7)
+                .addGap(101, 101, 101))
             .addGroup(txtEmailCadastroLayout.createSequentialGroup()
                 .addGap(59, 59, 59)
                 .addGroup(txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -293,21 +308,36 @@ public class UICadastroUsuario extends javax.swing.JFrame {
                         .addComponent(txtSenhaCadastro)
                         .addComponent(txtCpfCadastro)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtEmailCadastroLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(btnLimpa1, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtEmailCadastroLayout.createSequentialGroup()
+                                .addComponent(btnCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(82, 82, 82))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtEmailCadastroLayout.createSequentialGroup()
+                                .addComponent(jLabel15)
+                                .addGap(103, 103, 103))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtEmailCadastroLayout.createSequentialGroup()
+                        .addComponent(jLabel16)
+                        .addGap(137, 137, 137))))
         );
         txtEmailCadastroLayout.setVerticalGroup(
             txtEmailCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(txtEmailCadastroLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel7)
-                .addGap(96, 96, 96)
+                .addGap(57, 57, 57)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtNomeCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtemailCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtSenhaCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -315,23 +345,15 @@ public class UICadastroUsuario extends javax.swing.JFrame {
                 .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtCpfCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(103, 103, 103)
+                .addGap(38, 38, 38)
                 .addComponent(btnCadastro, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
-                .addGap(44, 44, 44)
+                .addGap(18, 18, 18)
+                .addComponent(btnLimpa1, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
+                .addGap(45, 45, 45)
                 .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(18, 18, 18)
+                .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
-
-        jLabel16.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel16.setForeground(new java.awt.Color(41, 144, 141));
-        jLabel16.setText("Quero ser prestador");
-        jLabel16.setToolTipText("");
-        jLabel16.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(41, 144, 181)));
-        jLabel16.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel16MouseClicked(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -341,18 +363,12 @@ public class UICadastroUsuario extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(txtEmailCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(36, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel16)
-                .addGap(172, 172, 172))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(txtEmailCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -530,10 +546,11 @@ public class UICadastroUsuario extends javax.swing.JFrame {
                 .addComponent(jLabel11)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtConsultaSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(71, 71, 71)
+                .addGap(69, 69, 69)
                 .addComponent(btnAtualiza, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
-                .addGap(22, 22, 22)
-                .addComponent(btnDelete, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(btnDelete, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -568,9 +585,9 @@ public class UICadastroUsuario extends javax.swing.JFrame {
                     .addGroup(kGradientPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(32, 32, 32)
+                .addGap(55, 55, 55)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(50, 50, 50)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(272, Short.MAX_VALUE))
         );
@@ -598,7 +615,7 @@ public class UICadastroUsuario extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(kGradientPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 56, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -608,6 +625,7 @@ public class UICadastroUsuario extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastroActionPerformed
@@ -615,7 +633,6 @@ public class UICadastroUsuario extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 cadastraCliente(novoCliente);
-                LimpaCampos();
             }
         });
     }//GEN-LAST:event_btnCadastroActionPerformed
@@ -659,13 +676,12 @@ public class UICadastroUsuario extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 atualizaCliente(novoCliente);
-                LimpaCamposConsulta();
             }
         });
     }//GEN-LAST:event_btnAtualizaActionPerformed
 
     private void jLabel15MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel15MouseClicked
-        UIloginUsuario telaLogin = new UIloginUsuario();
+        UILoginUsuario telaLogin = new UILoginUsuario();
         this.dispose();
         telaLogin.setVisible(true);
     }//GEN-LAST:event_jLabel15MouseClicked
@@ -694,6 +710,15 @@ public class UICadastroUsuario extends javax.swing.JFrame {
         this.dispose();
         cadastroPrest.setVisible(true);
     }//GEN-LAST:event_jLabel16MouseClicked
+
+    private void btnLimpa1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpa1ActionPerformed
+        btnLimpa1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                LimpaCampos();
+            }
+        });
+    }//GEN-LAST:event_btnLimpa1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -739,6 +764,7 @@ public class UICadastroUsuario extends javax.swing.JFrame {
     private javax.swing.JButton btnCadastro;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnLimpa;
+    private javax.swing.JButton btnLimpa1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

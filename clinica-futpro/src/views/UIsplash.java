@@ -1,49 +1,38 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package views;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author mvini
- */
 public class UIsplash extends javax.swing.JFrame {
 
-    /**
-     * Creates new form UIsplash
-     */
     public UIsplash() {
         initComponents();
-        
+
         new Thread() {
-            
-            public void run(){
-                
-                for(int i = 0; i<101;i++){
+
+            public void run() {
+
+                for (int i = 0; i < 101; i++) {
                     try {
                         sleep(60);
-                        jProgressBar1.setValue(i);
-                        
-                        if(jProgressBar1.getValue() <= 40){
-                            jLabel2.setText("Carregando Banco de Dados...");
-                        }else if(jProgressBar1.getValue() <= 70){
+                        loadingBar.setValue(i);
+
+                        if (loadingBar.getValue() <= 40) {
+                            jLabel2.setText("Carregando Dados...");
+                        } else if (loadingBar.getValue() <= 70) {
                             jLabel2.setText("Carregando Tabelas...");
-                        }else{
+                        } else {
                             jLabel2.setText("Carregando Sistema...");
                         }
                     } catch (InterruptedException ex) {
                         Logger.getLogger(UIsplash.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                UIloginUsuario login = new UIloginUsuario();
+                UICadastroUsuario telaCadastroUsuario = new UICadastroUsuario();
                 dispose();
-                login.setVisible(true);
+                telaCadastroUsuario.setVisible(true);
             }
-            
+
         }.start();
     }
 
@@ -58,7 +47,7 @@ public class UIsplash extends javax.swing.JFrame {
 
         kGradientPanel1 = new keeptoo.KGradientPanel();
         jLabel1 = new javax.swing.JLabel();
-        jProgressBar1 = new javax.swing.JProgressBar();
+        loadingBar = new javax.swing.JProgressBar();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
 
@@ -71,7 +60,7 @@ public class UIsplash extends javax.swing.JFrame {
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/image-removebg-preview (2).png"))); // NOI18N
 
-        jProgressBar1.setStringPainted(true);
+        loadingBar.setStringPainted(true);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
@@ -93,13 +82,14 @@ public class UIsplash extends javax.swing.JFrame {
                 .addContainerGap(279, Short.MAX_VALUE)
                 .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, kGradientPanel1Layout.createSequentialGroup()
-                        .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(loadingBar, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(276, 276, 276))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, kGradientPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel3)
-                        .addGap(356, 356, 356))))
+                        .addGap(356, 356, 356))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, kGradientPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(385, 385, 385))))
         );
         kGradientPanel1Layout.setVerticalGroup(
             kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -109,10 +99,10 @@ public class UIsplash extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(68, 68, 68)
-                .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(loadingBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
-                .addContainerGap(59, Short.MAX_VALUE))
+                .addContainerGap(65, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -169,7 +159,7 @@ public class UIsplash extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JProgressBar jProgressBar1;
     private keeptoo.KGradientPanel kGradientPanel1;
+    private javax.swing.JProgressBar loadingBar;
     // End of variables declaration//GEN-END:variables
 }
